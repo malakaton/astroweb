@@ -80,7 +80,7 @@ if (Astro.request.method === 'POST') {
       surface: Number(form.get('surface')),
       duration: (form.get('duration') as string)?.trim(),
       budget_range: (form.get('budget_range') as string)?.trim() || null,
-      highlights: JSON.stringify(highlights),
+      highlights,
       featured: form.get('featured') === 'on',
       draft: form.get('draft') === 'on',
       order: Number(form.get('order')) || 99,
