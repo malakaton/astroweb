@@ -15,6 +15,18 @@ const { data: servicios } = await supabase
 
 let error = '';
 
+function buildTestimonial(form: FormData) {
+  const quote = (form.get('testimonial_quote') as string)?.trim();
+  const author = (form.get('testimonial_author') as string)?.trim();
+  if (!quote || !author) return null;
+  return {
+    quote,
+    author,
+    role: (form.get('testimonial_role') as string)?.trim() || undefined,
+    rating: Number(form.get('testimonial_rating')) || 5,
+  };
+}
+
 if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
 
@@ -63,7 +75,7 @@ if (Astro.request.method === 'POST') {
       duration: (form.get('duration') as string)?.trim(),
       budget_range: (form.get('budget_range') as string)?.trim() || null,
       highlights,
-      testimonial: null,
+      testimonial: buildTestimonial(form),
       featured: form.get('featured') === 'on',
       draft: form.get('draft') === 'on',
       order: Number(form.get('order')) || 99,
@@ -251,7 +263,30 @@ if (Astro.request.method === 'POST') {
           placeholder="## Punto de partida&#10;&#10;Un ático de 1962 que conservaba...&#10;&#10;## Intervención&#10;&#10;Se eliminó el tabique..."
           class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5 font-mono text-sm"
         ></textarea>
-        <p class="mt-1 text-xs text-muted">Puedes usar títulos (## ), negritas (**texto**) y listas (- item).</p>
+        <p class="mt-1 text-xs text-muted">Puedes usar títulos (## ), negritas (**texto**) y listas (- item). Este contenido aparece en la página del proyecto.</p>
+      </div>
+
+      <!-- Testimonial del cliente -->
+      <div class="sm:col-span-2 rounded-lg border border-brand-100 bg-brand-50 p-5">
+        <h3 class="mb-4 text-base font-bold text-brand-900">💬 Testimonio del cliente (opcional)</h3>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label class="mb-1.5 block text-sm font-bold text-brand-900" for="testimonial_quote">Cita</label>
+            <textarea id="testimonial_quote" name="testimonial_quote" rows="3" placeholder="Lo que dijo el cliente sobre la obra..." class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5"></textarea>
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-bold text-brand-900" for="testimonial_author">Nombre del cliente</label>
+            <input type="text" id="testimonial_author" name="testimonial_author" placeholder="Marta G." class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-bold text-brand-900" for="testimonial_role">Rol / relación</label>
+            <input type="text" id="testimonial_role" name="testimonial_role" placeholder="Propietaria del ático" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-bold text-brand-900" for="testimonial_rating">Valoración (1-5)</label>
+            <input type="number" id="testimonial_rating" name="testimonial_rating" min="1" max="5" value="5" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+          </div>
+        </div>
       </div>
 
       <!-- Opciones -->
