@@ -1,0 +1,238 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { createAdminClient } from '@lib/admin-auth';
+
+const supabase = createAdminClient(Astro.cookies);
+const { slug } = Astro.params;
+
+// Cargar el proyecto actual
+const { data: proyecto } = await supabase
+  .from('proyectos')
+  .select('*')
+  .eq('slug', slug)
+  .single();
+
+if (!proyecto) {
+  return Astro.redirect('/admin');
+}
+
+// Cargar servicios para el desplegable
+const { data: servicios } = await supabase
+  .from('servicios')
+  .select('slug, title, short_title')
+  .order('order', { ascending: true });
+
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = form.get('_action');
+
+  // Eliminar proyecto
+  if (action === 'delete') {
+    // Borrar imagen del Storage
+    if (proyecto.cover_url) {
+      const path = proyecto.cover_url.split('/imagenes/')[1];
+      if (path) await supabase.storage.from('imagenes').remove([path]);
+    }
+    await supabase.from('proyectos').delete().eq('slug', slug);
+    return Astro.redirect('/admin');
+  }
+
+  // Actualizar proyecto
+  let coverUrl = proyecto.cover_url;
+
+  const file = form.get('cover') as File;
+  if (file && file.size > 0) {
+    const ext = file.name.split('.').pop() || 'webp';
+    const path = `proyectos/${slug}/cover.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('imagenes')
+      .upload(path, file, { contentType: file.type, upsert: true });
+
+    if (uploadError) {
+      error = `Error al subir la imagen: ${uploadError.message}`;
+    } else {
+      const { data: urlData } = supabase.storage.from('imagenes').getPublicUrl(path);
+      coverUrl = urlData.publicUrl;
+    }
+  }
+
+  if (!error) {
+    const highlights = (form.get('highlights') as string)
+      ?.split('\n')
+      .map((h) => h.trim())
+      .filter(Boolean) ?? [];
+
+    const updateData = {
+      title: (form.get('title') as string)?.trim(),
+      description: (form.get('description') as string)?.trim(),
+      excerpt: (form.get('excerpt') as string)?.trim(),
+      cover_url: coverUrl,
+      cover_alt: (form.get('cover_alt') as string)?.trim(),
+      servicio_slug: (form.get('servicio_slug') as string) || null,
+      location: (form.get('location') as string)?.trim(),
+      year: Number(form.get('year')),
+      surface: Number(form.get('surface')),
+      duration: (form.get('duration') as string)?.trim(),
+      budget_range: (form.get('budget_range') as string)?.trim() || null,
+      highlights: JSON.stringify(highlights),
+      featured: form.get('featured') === 'on',
+      draft: form.get('draft') === 'on',
+      order: Number(form.get('order')) || 99,
+      body_md: (form.get('body_md') as string)?.trim() || null,
+    };
+
+    const { error: updateError } = await supabase
+      .from('proyectos')
+      .update(updateData)
+      .eq('slug', slug);
+
+    if (updateError) {
+      error = `Error al guardar: ${updateError.message}`;
+    } else {
+      return Astro.redirect('/admin');
+    }
+  }
+}
+
+const highlightsText = Array.isArray(proyecto.highlights)
+  ? proyecto.highlights.join('\n')
+  : '';
+---
+
+<AdminLayout title={`Editar: ${proyecto.title}`}>
+  {error && (
+    <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+      {error}
+    </div>
+  )}
+
+  <form method="POST" enctype="multipart/form-data" class="max-w-3xl space-y-6">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="title">Título *</label>
+        <input type="text" id="title" name="title" required maxlength="70" value={proyecto.title} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="servicio_slug">Servicio</label>
+        <select id="servicio_slug" name="servicio_slug" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5">
+          <option value="">Seleccionar...</option>
+          {servicios?.map((s) => (
+            <option value={s.slug} selected={s.slug === proyecto.servicio_slug}>{s.short_title || s.title}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900">Slug</label>
+        <input type="text" disabled value={proyecto.slug} class="w-full rounded-lg border border-brand-100 bg-brand-50 px-3.5 py-2.5 text-muted" />
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="description">Meta description *</label>
+        <input type="text" id="description" name="description" required minlength="70" maxlength="158" value={proyecto.description} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="excerpt">Resumen *</label>
+        <textarea id="excerpt" name="excerpt" required maxlength="220" rows="2" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5">{proyecto.excerpt}</textarea>
+      </div>
+
+      <!-- Imagen actual + cambio -->
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900">Foto de portada</label>
+        {proyecto.cover_url && (
+          <img src={proyecto.cover_url} alt={proyecto.cover_alt} class="mb-3 h-40 rounded-lg object-cover" width="320" height="160" />
+        )}
+        <input
+          type="file"
+          name="cover"
+          accept="image/webp,image/jpeg,image/png"
+          class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+        />
+        <p class="mt-1 text-xs text-muted">Deja vacío para mantener la foto actual.</p>
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="cover_alt">Texto alt de la foto *</label>
+        <input type="text" id="cover_alt" name="cover_alt" required value={proyecto.cover_alt} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="location">Localización *</label>
+        <input type="text" id="location" name="location" required value={proyecto.location} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="year">Año *</label>
+        <input type="number" id="year" name="year" required min="2000" max="2100" value={proyecto.year} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="surface">Superficie (m²) *</label>
+        <input type="number" id="surface" name="surface" required min="1" value={proyecto.surface} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="duration">Duración *</label>
+        <input type="text" id="duration" name="duration" required value={proyecto.duration} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="budget_range">Presupuesto</label>
+        <input type="text" id="budget_range" name="budget_range" value={proyecto.budget_range ?? ''} class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="order">Orden</label>
+        <input type="number" id="order" name="order" value={proyecto.order} min="1" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5" />
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="highlights">Claves (una por línea)</label>
+        <textarea id="highlights" name="highlights" rows="4" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5">{highlightsText}</textarea>
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-1.5 block text-sm font-bold text-brand-900" for="body_md">Descripción (Markdown)</label>
+        <textarea id="body_md" name="body_md" rows="10" class="w-full rounded-lg border border-brand-200 px-3.5 py-2.5 font-mono text-sm">{proyecto.body_md ?? ''}</textarea>
+      </div>
+
+      <div class="sm:col-span-2 flex gap-6">
+        <label class="flex items-center gap-2 text-sm font-semibold text-brand-900">
+          <input type="checkbox" name="featured" class="size-5 rounded border-brand-300" checked={proyecto.featured} />
+          Destacado
+        </label>
+        <label class="flex items-center gap-2 text-sm font-semibold text-brand-900">
+          <input type="checkbox" name="draft" class="size-5 rounded border-brand-300" checked={proyecto.draft} />
+          Borrador
+        </label>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 border-t border-brand-100 pt-6">
+      <button type="submit" class="inline-flex min-h-12 items-center gap-2 rounded-lg bg-accent-700 px-6 font-semibold text-white hover:bg-accent-800">
+        💾 Guardar cambios
+      </button>
+      <a href="/admin" class="inline-flex min-h-12 items-center rounded-lg border-2 border-brand-200 px-5 font-semibold text-brand-800 hover:bg-brand-50">
+        Cancelar
+      </a>
+
+      <!-- Eliminar -->
+      <button
+        type="submit"
+        name="_action"
+        value="delete"
+        class="ml-auto inline-flex min-h-12 items-center rounded-lg bg-red-50 px-5 font-semibold text-red-700 hover:bg-red-100"
+        onclick="return confirm('¿Seguro que quieres eliminar este proyecto? Esta acción no se puede deshacer.')"
+      >
+        🗑 Eliminar
+      </button>
+    </div>
+  </form>
+</AdminLayout>

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Solo /api/* pasa por Pages Functions; el resto se sirve como estático desde el CDN sin invocar el runtime.",
-  "include": ["/api/*"],
+  "description": "Solo /api/* y /admin/* pasan por el runtime Workers (SSR). El resto se sirve estático desde el CDN.",
+  "include": ["/api/*", "/admin/*"],
   "exclude": []
 }

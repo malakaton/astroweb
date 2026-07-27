@@ -4,7 +4,7 @@
 --
 -- Las URLs de cover_url son placeholders: sustitúyelas por las URLs reales
 -- del bucket de Storage cuando subas las fotos definitivas.
--- Formato: https://TU-PROYECTO.supabase.co/storage/v1/object/public/imagenes/servicios/nombre.webp
+-- Formato: https://donirysodidyakcmsfhc.supabase.co/storage/v1/object/public/imagenes/servicios/nombre.webp
 -- ============================================================================
 
 -- ── SERVICIOS ───────────────────────────────────────────────────────────────
@@ -17,7 +17,7 @@ INSERT INTO public.servicios (slug, title, short_title, seo_title, description, 
  'Reforma integral de pisos en Madrid',
  'Reforma integral de pisos y casas en Madrid con presupuesto cerrado, dirección de obra propia y 3 años de garantía. Proyecto llave en mano en 8-12 semanas.',
  'Rediseñamos tu vivienda completa con un único responsable de obra, presupuesto cerrado y plazos por escrito. Distribución, instalaciones, acabados y licencias.',
- 'https://TU-PROYECTO.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-integral.webp',
+ 'https://donirysodidyakcmsfhc.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-integral.webp',
  'Salón amplio y luminoso tras una reforma integral en Madrid',
  'home', 1, 480, 'm²', '8-12 semanas',
  '["Presupuesto cerrado por partidas, sin sobrecostes","Jefe de obra asignado y parte semanal de avance","Gestión completa de licencias y trámites municipales","Industriales propios: sin subcontratas descontroladas","Garantía de 3 años sobre instalaciones y acabados"]',
@@ -32,7 +32,7 @@ INSERT INTO public.servicios (slug, title, short_title, seo_title, description, 
  'Reforma de cocinas en Madrid',
  'Reformamos tu cocina en 3-4 semanas con diseño 3D, mobiliario a medida e instalaciones nuevas. Presupuesto cerrado, montaje propio y garantía de 3 años.',
  'Diseño 3D antes de empezar, mobiliario a medida, encimeras técnicas e instalaciones renovadas. Cocinas abiertas o cerradas ejecutadas en 3-4 semanas.',
- 'https://TU-PROYECTO.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-de-cocinas.webp',
+ 'https://donirysodidyakcmsfhc.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-de-cocinas.webp',
  'Cocina reformada con isla central y muebles a medida en Madrid',
  'kitchen', 2, 7900, 'cocina', '3-4 semanas',
  '["Diseño 3D previo para validar distribución y acabados","Mobiliario a medida con herrajes de cierre amortiguado","Encimeras en porcelánico, compac o cuarzo técnico","Electricidad y fontanería nuevas con circuitos independientes","Coordinación de electrodomésticos y puesta en marcha"]',
@@ -47,7 +47,7 @@ INSERT INTO public.servicios (slug, title, short_title, seo_title, description, 
  'Reforma de baños en Madrid en 2 semanas',
  'Reforma de baños en Madrid en 10-15 días: cambio de bañera por plato de ducha, impermeabilización certificada y saneamiento nuevo. Presupuesto cerrado.',
  'Baños funcionales y estancos ejecutados en 10-15 días. Cambio de bañera por ducha, impermeabilización garantizada y ventilación forzada silenciosa.',
- 'https://TU-PROYECTO.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-de-banos.webp',
+ 'https://donirysodidyakcmsfhc.supabase.co/storage/v1/object/public/imagenes/servicios/reforma-de-banos.webp',
  'Baño reformado con plato de ducha de obra y mampara de cristal',
  'droplet', 3, 4600, 'baño', '10-15 días',
  '["Impermeabilización con lámina líquida bajo alicatado","Cambio de bañera por plato de ducha antideslizante","Saneamiento y desagües renovados con pendientes correctas","Ventilación forzada silenciosa y suelo radiante opcional","Soluciones accesibles sin barreras arquitectónicas"]',

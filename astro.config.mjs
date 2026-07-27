@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import cloudflare from '@astrojs/cloudflare';
 
 /**
  * Dominio canónico. Debe coincidir con `SITE.url` de src/config/site.ts:
@@ -20,7 +21,11 @@ const SITE_URL = 'https://www.reformasarana.es';
  */
 export default defineConfig({
   site: SITE_URL,
+  // En Astro 5, `output: 'static'` permite páginas SSR individuales con
+  // `export const prerender = false`. El adaptador Cloudflare se activa solo
+  // para esas páginas (/admin/*). El resto se prerenderiza como HTML estático.
   output: 'static',
+  adapter: cloudflare(),
   trailingSlash: 'never',
   build: {
     // Genera /servicios/reforma-integral.html en lugar de /…/index.html:
@@ -39,7 +44,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/gracias') && !page.includes('/404'),
+      filter: (page) => !page.includes('/gracias') && !page.includes('/404') && !page.includes('/admin'),
       changefreq: 'monthly',
       lastmod: new Date(),
       serialize(item) {
