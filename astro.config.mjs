@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
+import cloudflare from "@astrojs/cloudflare";
+
 /**
  * Dominio canónico. Debe coincidir con `SITE.url` de src/config/site.ts:
  * de ahí salen las canonical, el sitemap y las URLs de Open Graph.
@@ -22,12 +24,14 @@ export default defineConfig({
   site: SITE_URL,
   output: 'static',
   trailingSlash: 'never',
+
   build: {
     // Genera /servicios/reforma-integral.html en lugar de /…/index.html:
     // Cloudflare Pages lo sirve como /servicios/reforma-integral sin redirección.
     format: 'file',
     inlineStylesheets: 'auto',
   },
+
   // `prefetch` queda deliberadamente desactivado: la integración inyecta ~1 KB
   // de JS en todas las páginas y el sitio se sirve completo desde el CDN de
   // Cloudflare. Objetivo cumplido: 0 KB de JavaScript en el cliente.
@@ -37,6 +41,7 @@ export default defineConfig({
     // al hueco real de cada componente, sin CSS inyectado que interfiera.
     domains: [],
   },
+
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/gracias') && !page.includes('/404'),
@@ -54,9 +59,12 @@ export default defineConfig({
       },
     }),
   ],
+
   vite: {
     // Cast necesario: el paquete tailwindcss/vite resuelve su propio `vite`,
     // por lo que TypeScript ve dos tipos `Plugin` estructuralmente distintos.
     plugins: [/** @type {any} */ (tailwindcss())],
   },
+
+  adapter: cloudflare()
 });

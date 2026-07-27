@@ -11,15 +11,18 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "npm run build && wrangler dev",
     "check": "astro check",
     "sync": "astro sync",
     "images:generate": "node scripts/generate-images.mjs",
     "postinstall": "astro sync",
     "audit:seo": "node scripts/audit-seo.mjs",
-    "test": "node --experimental-strip-types --test 'tests/**/*.test.ts'"
+    "test": "node --experimental-strip-types --test 'tests/**/*.test.ts'",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^5.18.2",
@@ -28,8 +31,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@cloudflare/workers-types": "^4.20260702.1",
+    "@cloudflare/workers-types": "^5.20260727.1",
     "@types/node": "^22.20.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.114.0"
   }
 }
