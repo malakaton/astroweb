@@ -2,9 +2,9 @@
 export const prerender = false;
 
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv } from '@lib/admin-auth';
 
-const SUPABASE_URL = import.meta.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY;
+const env = getSupabaseEnv(Astro.locals);
 
 let error = '';
 
@@ -16,16 +16,15 @@ if (Astro.request.method === 'POST') {
   if (!email || !password) {
     error = 'Introduce email y contraseña.';
   } else {
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
       auth: { flowType: 'pkce', autoRefreshToken: false, detectSessionInUrl: false, persistSession: false },
     });
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (authError || !data.session) {
-      error = 'Email o contraseña incorrectos.';
+      error = authError?.message ?? 'Email o contraseña incorrectos.';
     } else {
-      // Guardar tokens en cookies httpOnly seguras
       Astro.cookies.set('sb-access-token', data.session.access_token, {
         path: '/admin',
         httpOnly: true,

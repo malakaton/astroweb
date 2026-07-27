@@ -2,9 +2,10 @@
 export const prerender = false;
 
 import AdminLayout from '@layouts/AdminLayout.astro';
-import { createAdminClient } from '@lib/admin-auth';
+import { createAdminClient, getSupabaseEnv } from '@lib/admin-auth';
 
-const supabase = createAdminClient(Astro.cookies);
+const env = getSupabaseEnv(Astro.locals);
+const supabase = createAdminClient(env, Astro.cookies);
 
 // Cargar servicios para el desplegable
 const { data: servicios } = await supabase

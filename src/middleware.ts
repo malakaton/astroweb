@@ -1,35 +1,33 @@
 import { defineMiddleware } from 'astro:middleware';
-import { getSession } from '@lib/admin-auth';
+import { getSession, getSupabaseEnv } from '@lib/admin-auth';
 
 /**
  * Middleware de autenticación.
- *
- * Protege todas las rutas /admin/* (excepto /admin/login):
- * si no hay sesión válida, redirige al login.
+ * Protege todas las rutas /admin/* (excepto /admin/login).
  */
 export const onRequest = defineMiddleware(async ({ url, cookies, redirect, locals }, next) => {
-  // Solo actúa en rutas /admin
   if (!url.pathname.startsWith('/admin')) {
     return next();
   }
 
-  // /admin/login es pública (si no, no podrían autenticarse)
+  const env = getSupabaseEnv(locals);
+
+  // /admin/login es pública
   if (url.pathname === '/admin/login') {
-    // Si ya tiene sesión, le llevamos al dashboard
-    const session = await getSession(cookies);
-    if (session) {
-      return redirect('/admin');
-    }
+    const session = await getSession(env, cookies);
+    if (session) return redirect('/admin');
     return next();
   }
 
-  // El resto de /admin/* requiere sesión
-  const session = await getSession(cookies);
-  if (!session) {
-    return redirect('/admin/login');
+  // /admin/logout no requiere sesión válida
+  if (url.pathname === '/admin/logout') {
+    return next();
   }
 
-  // Guardamos el usuario en locals para que las páginas lo lean
+  // El resto requiere sesión
+  const session = await getSession(env, cookies);
+  if (!session) return redirect('/admin/login');
+
   (locals as any).user = session.user;
 
   return next();

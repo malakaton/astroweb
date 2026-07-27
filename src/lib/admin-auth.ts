@@ -1,18 +1,24 @@
 /**
  * Cliente de Supabase para el panel de administración (SSR).
  *
- * Se instancia en cada request con las cookies del usuario para mantener
- * la sesión. Usa la clave anon (pública) porque RLS controla los permisos
- * según el usuario autenticado.
+ * En Cloudflare Pages, las variables de entorno en runtime NO están en
+ * import.meta.env (eso solo funciona en build time). Se acceden desde
+ * el contexto de la request: Astro.locals.runtime.env
+ *
+ * Por eso este módulo recibe las credenciales como parámetro.
  */
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { AstroCookies } from 'astro';
 
-const SUPABASE_URL = import.meta.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY;
+export interface SupabaseEnv {
+  SUPABASE_URL: string;
+  SUPABASE_ANON_KEY: string;
+}
 
-export function createAdminClient(cookies: AstroCookies): SupabaseClient {
-  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+export function createAdminClient(env: SupabaseEnv, cookies: AstroCookies): SupabaseClient {
+  const accessToken = cookies.get('sb-access-token')?.value;
+
+  return createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
     auth: {
       flowType: 'pkce',
       autoRefreshToken: false,
@@ -21,23 +27,20 @@ export function createAdminClient(cookies: AstroCookies): SupabaseClient {
     },
     global: {
       headers: {
-        // Pasamos el token de la cookie para que Supabase lo use
-        ...(cookies.get('sb-access-token')?.value
-          ? { Authorization: `Bearer ${cookies.get('sb-access-token')!.value}` }
-          : {}),
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
     },
   });
 }
 
 /** Obtiene la sesión del usuario actual desde las cookies */
-export async function getSession(cookies: AstroCookies) {
+export async function getSession(env: SupabaseEnv, cookies: AstroCookies) {
   const accessToken = cookies.get('sb-access-token')?.value;
   const refreshToken = cookies.get('sb-refresh-token')?.value;
 
   if (!accessToken || !refreshToken) return null;
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
     auth: {
       flowType: 'pkce',
       autoRefreshToken: false,
@@ -60,14 +63,14 @@ export async function getSession(cookies: AstroCookies) {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 días
+      maxAge: 60 * 60 * 24 * 7,
     });
     cookies.set('sb-refresh-token', data.session.refresh_token!, {
       path: '/admin',
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 días
+      maxAge: 60 * 60 * 24 * 30,
     });
   }
 
@@ -78,4 +81,17 @@ export async function getSession(cookies: AstroCookies) {
 export function clearSession(cookies: AstroCookies) {
   cookies.delete('sb-access-token', { path: '/admin' });
   cookies.delete('sb-refresh-token', { path: '/admin' });
+}
+
+/**
+ * Extrae las variables de Supabase del contexto de Cloudflare runtime.
+ * En Cloudflare Pages, Astro.locals.runtime.env contiene las variables de entorno.
+ */
+export function getSupabaseEnv(locals: App.Locals): SupabaseEnv {
+  const runtime = (locals as any).runtime;
+  const env = runtime?.env ?? {};
+  return {
+    SUPABASE_URL: env.SUPABASE_URL ?? import.meta.env.SUPABASE_URL ?? '',
+    SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY ?? import.meta.env.SUPABASE_ANON_KEY ?? '',
+  };
 }
