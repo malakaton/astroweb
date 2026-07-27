@@ -48,6 +48,9 @@ async function fetchRows(table: string): Promise<Record<string, unknown>[]> {
  * camelCase que espera el schema de zod definido en content.config.ts.
  */
 function mapServicio(row: Record<string, unknown>): Record<string, unknown> {
+  // Los campos JSONB pueden llegar como string si se insertaron con JSON.stringify
+  const parse = (val: unknown) => typeof val === 'string' ? JSON.parse(val) : val;
+
   return {
     title: row.title,
     shortTitle: row.short_title ?? null,
@@ -61,15 +64,23 @@ function mapServicio(row: Record<string, unknown>): Record<string, unknown> {
     priceFrom: row.price_from ?? null,
     priceUnit: row.price_unit,
     duration: row.duration ?? null,
-    features: row.features,
-    includes: row.includes,
-    faqs: row.faqs,
+    features: parse(row.features),
+    includes: parse(row.includes),
+    faqs: parse(row.faqs),
     updatedAt: row.updated_at,
     draft: row.draft,
   };
 }
 
 function mapProyecto(row: Record<string, unknown>): Record<string, unknown> {
+  // highlights y testimonial pueden venir como string JSON desde Supabase
+  const highlights = typeof row.highlights === 'string'
+    ? JSON.parse(row.highlights)
+    : row.highlights;
+  const testimonial = typeof row.testimonial === 'string'
+    ? JSON.parse(row.testimonial)
+    : row.testimonial;
+
   return {
     title: row.title,
     description: row.description,
@@ -82,8 +93,8 @@ function mapProyecto(row: Record<string, unknown>): Record<string, unknown> {
     surface: row.surface,
     duration: row.duration,
     budgetRange: row.budget_range ?? null,
-    highlights: row.highlights,
-    testimonial: row.testimonial ?? null,
+    highlights,
+    testimonial: testimonial ?? null,
     featured: row.featured,
     order: row.order,
     updatedAt: row.updated_at,
