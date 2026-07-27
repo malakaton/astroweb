@@ -30,7 +30,7 @@ const { Content } = await render(servicio);
 
 /** Proyectos ejecutados de este servicio: enlazado interno temático */
 const proyectosRelacionados = (await getCollection('proyectos'))
-  .filter((p) => !p.data.draft && p.data.servicio.id === servicio.id)
+  .filter((p) => !p.data.draft && p.data.servicio === servicio.id)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
@@ -59,7 +59,7 @@ if (data.faqs.length > 0) {
 const relacionadosConServicio = await Promise.all(
   proyectosRelacionados.map(async (proyecto) => ({
     proyecto,
-    servicioRef: await getEntry(proyecto.data.servicio),
+    servicioRef: await getEntry('servicios', proyecto.data.servicio),
   })),
 );
 ---
@@ -109,18 +109,30 @@ const relacionadosConServicio = await Promise.all(
         </div>
 
         <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
-          <Image
-            src={data.cover}
-            alt={data.coverAlt}
-            widths={[640, 960, 1280]}
-            sizes="(min-width: 1024px) 560px, 92vw"
-            loading="eager"
-            fetchpriority="high"
-            decoding="sync"
-            format="webp"
-            quality={76}
-            class="aspect-3/2 size-full object-cover"
-          />
+          {typeof data.cover === 'string' ? (
+            <img
+              src={data.cover}
+              alt={data.coverAlt}
+              width={1280}
+              height={853}
+              loading="eager"
+              decoding="sync"
+              class="aspect-3/2 size-full object-cover"
+            />
+          ) : (
+            <Image
+              src={data.cover}
+              alt={data.coverAlt}
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 1024px) 560px, 92vw"
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+              format="webp"
+              quality={76}
+              class="aspect-3/2 size-full object-cover"
+            />
+          )}
         </div>
       </div>
     </div>

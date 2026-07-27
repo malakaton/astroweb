@@ -1,96 +1,94 @@
 /**
  * Loader de Supabase para Astro Content Layer.
  *
- * Sustituye al loader de glob (archivos .md) por una lectura directa a la
- * base de datos. Las páginas y el schema de zod no cambian: solo cambia
- * el origen de los datos.
- *
- * Uso en src/content.config.ts:
- *   import { supabaseLoader } from './loaders/supabase-loader';
- *   const proyectos = defineCollection({
- *     loader: supabaseLoader('proyectos'),
- *     schema: ...  // igual que antes
- *   });
+ * Lee las tablas `servicios` y `proyectos` de Supabase en tiempo de build
+ * y las inyecta en el Content Store de Astro. Las páginas y el schema de zod
+ * no cambian: solo cambia el origen de los datos.
  */
 import type { Loader } from 'astro/loaders';
 
-const SUPABASE_URL = import.meta.env.SUPABASE_URL ?? process.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
+function getEnv(name: string): string | undefined {
+  // Astro build: import.meta.env; Node scripts: process.env
+  try {
+    return (import.meta as any).env?.[name] ?? process.env[name];
+  } catch {
+    return process.env[name];
+  }
+}
 
 async function fetchRows(table: string): Promise<Record<string, unknown>[]> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  const url = getEnv('SUPABASE_URL');
+  const key = getEnv('SUPABASE_ANON_KEY');
+
+  if (!url || !key) {
     throw new Error(
       `Faltan SUPABASE_URL o SUPABASE_ANON_KEY en el entorno. ` +
-      `Añádelas en .env o en las variables de build de Cloudflare.`
+        `Añádelas en .env o en las variables de build de Cloudflare Pages.`,
     );
   }
 
-  const url = `${SUPABASE_URL}/rest/v1/${table}?draft=eq.false&order=order.asc`;
-  const response = await fetch(url, {
+  const endpoint = `${url.replace(/\/$/, '')}/rest/v1/${table}?draft=eq.false&order=order.asc`;
+  const response = await fetch(endpoint, {
     headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      apikey: key,
+      Authorization: `Bearer ${key}`,
     },
   });
 
   if (!response.ok) {
-    throw new Error(`Supabase ${table}: ${response.status} ${await response.text()}`);
+    const body = await response.text().catch(() => '');
+    throw new Error(`Supabase ${table}: HTTP ${response.status} — ${body.slice(0, 300)}`);
   }
 
   return response.json() as Promise<Record<string, unknown>[]>;
 }
 
 /**
- * Transforma los nombres de columnas de Supabase (snake_case) al formato
- * que espera el schema de zod (camelCase / nombres del frontmatter).
+ * Transforma los nombres de columna (snake_case en Supabase) al formato
+ * camelCase que espera el schema de zod definido en content.config.ts.
  */
-function mapRow(table: string, row: Record<string, unknown>): Record<string, unknown> {
-  if (table === 'proyectos') {
-    return {
-      title: row.title,
-      description: row.description,
-      excerpt: row.excerpt,
-      // En vez de una imagen local, se usa la URL pública del Storage
-      cover: row.cover_url,
-      coverAlt: row.cover_alt,
-      servicio: row.servicio_slug,
-      location: row.location,
-      year: row.year,
-      surface: row.surface,
-      duration: row.duration,
-      budgetRange: row.budget_range,
-      highlights: row.highlights,
-      testimonial: row.testimonial,
-      featured: row.featured,
-      order: row.order,
-      updatedAt: row.updated_at,
-      draft: row.draft,
-    };
-  }
+function mapServicio(row: Record<string, unknown>): Record<string, unknown> {
+  return {
+    title: row.title,
+    shortTitle: row.short_title ?? null,
+    seoTitle: row.seo_title ?? null,
+    description: row.description,
+    excerpt: row.excerpt,
+    cover: row.cover_url,
+    coverAlt: row.cover_alt,
+    icon: row.icon,
+    order: row.order,
+    priceFrom: row.price_from ?? null,
+    priceUnit: row.price_unit,
+    duration: row.duration ?? null,
+    features: row.features,
+    includes: row.includes,
+    faqs: row.faqs,
+    updatedAt: row.updated_at,
+    draft: row.draft,
+  };
+}
 
-  if (table === 'servicios') {
-    return {
-      title: row.title,
-      shortTitle: row.short_title,
-      seoTitle: row.seo_title,
-      description: row.description,
-      excerpt: row.excerpt,
-      cover: row.cover_url,
-      coverAlt: row.cover_alt,
-      icon: row.icon,
-      order: row.order,
-      priceFrom: row.price_from,
-      priceUnit: row.price_unit,
-      duration: row.duration,
-      features: row.features,
-      includes: row.includes,
-      faqs: row.faqs,
-      updatedAt: row.updated_at,
-      draft: row.draft,
-    };
-  }
-
-  return row;
+function mapProyecto(row: Record<string, unknown>): Record<string, unknown> {
+  return {
+    title: row.title,
+    description: row.description,
+    excerpt: row.excerpt,
+    cover: row.cover_url,
+    coverAlt: row.cover_alt,
+    servicio: row.servicio_slug,
+    location: row.location,
+    year: row.year,
+    surface: row.surface,
+    duration: row.duration,
+    budgetRange: row.budget_range ?? null,
+    highlights: row.highlights,
+    testimonial: row.testimonial ?? null,
+    featured: row.featured,
+    order: row.order,
+    updatedAt: row.updated_at,
+    draft: row.draft,
+  };
 }
 
 export function supabaseLoader(table: 'servicios' | 'proyectos'): Loader {
@@ -100,16 +98,18 @@ export function supabaseLoader(table: 'servicios' | 'proyectos'): Loader {
       const rows = await fetchRows(table);
       store.clear();
 
+      const mapper = table === 'servicios' ? mapServicio : mapProyecto;
+
       for (const row of rows) {
         const slug = row.slug as string;
-        const mapped = mapRow(table, row);
+        const mapped = mapper(row);
         const data = await parseData({ id: slug, data: mapped });
         const digest = generateDigest(data);
         store.set({
           id: slug,
           data,
           digest,
-          // Si el campo body_md tiene contenido Markdown, se renderiza
+          // Si hay contenido Markdown en body_md, se renderiza con <Content />
           ...(row.body_md ? { body: row.body_md as string } : {}),
         });
       }

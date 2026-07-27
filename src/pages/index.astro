@@ -30,7 +30,7 @@ const proyectosDestacados = (await getCollection('proyectos'))
 const destacadosConServicio = await Promise.all(
   proyectosDestacados.map(async (proyecto) => ({
     proyecto,
-    servicio: await getEntry(proyecto.data.servicio),
+    servicio: await getEntry('servicios', proyecto.data.servicio),
   })),
 );
 

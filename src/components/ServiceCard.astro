@@ -15,12 +15,13 @@ interface Props {
   href: string;
   title: string;
   excerpt: string;
-  image: ImageMetadata;
+  /** URL string (Supabase Storage) o ImageMetadata (asset local) */
+  image: string | ImageMetadata;
   imageAlt: string;
   icon: IconName;
-  priceFrom?: number;
+  priceFrom?: number | null;
   priceUnit?: string;
-  duration?: string;
+  duration?: string | null;
   /** La primera fila de tarjetas puede cargarse sin lazy si está cerca del viewport */
   eager?: boolean;
   headingLevel?: 'h2' | 'h3';
@@ -45,17 +46,29 @@ const {
   class="group relative flex w-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-brand-100 bg-white shadow-[var(--shadow-card)] transition-shadow duration-300 hover:shadow-[var(--shadow-lift)] focus-within:shadow-[var(--shadow-lift)]"
 >
   <div class="relative aspect-3/2 overflow-hidden bg-brand-100">
-    <Image
-      src={image}
-      alt={imageAlt}
-      widths={[400, 640, 800]}
-      sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 92vw"
-      loading={eager ? 'eager' : 'lazy'}
-      decoding={eager ? 'sync' : 'async'}
-      format="webp"
-      quality={74}
-      class="size-full object-cover transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]"
-    />
+    {typeof image === 'string' ? (
+      <img
+        src={image}
+        alt={imageAlt}
+        width={800}
+        height={533}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding={eager ? 'sync' : 'async'}
+        class="size-full object-cover transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]"
+      />
+    ) : (
+      <Image
+        src={image}
+        alt={imageAlt}
+        widths={[400, 640, 800]}
+        sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 92vw"
+        loading={eager ? 'eager' : 'lazy'}
+        decoding={eager ? 'sync' : 'async'}
+        format="webp"
+        quality={74}
+        class="size-full object-cover transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]"
+      />
+    )}
     <span
       class="absolute bottom-3 left-3 flex size-11 items-center justify-center rounded-lg bg-white/95 text-brand-900 shadow-sm"
       aria-hidden="true"

@@ -16,7 +16,7 @@ const proyectos = (await getCollection('proyectos'))
 const proyectosConServicio = await Promise.all(
   proyectos.map(async (proyecto) => ({
     proyecto,
-    servicio: await getEntry(proyecto.data.servicio),
+    servicio: await getEntry('servicios', proyecto.data.servicio),
   })),
 );
 

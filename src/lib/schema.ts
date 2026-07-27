@@ -156,7 +156,7 @@ export interface ServiceInput {
   name: string;
   description: string;
   image?: string;
-  priceFrom?: number;
+  priceFrom?: number | null;
 }
 
 export function service(input: ServiceInput): JsonLdNode {

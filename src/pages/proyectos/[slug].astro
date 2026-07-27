@@ -26,7 +26,7 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { proyecto } = Astro.props;
 const { data } = proyecto;
 const { Content } = await render(proyecto);
-const servicio = await getEntry(data.servicio);
+const servicio = await getEntry('servicios', data.servicio);
 
 const otrosProyectos = (await getCollection('proyectos'))
   .filter((p) => !p.data.draft && p.id !== proyecto.id)
@@ -34,7 +34,7 @@ const otrosProyectos = (await getCollection('proyectos'))
   .slice(0, 3);
 
 const otrosConServicio = await Promise.all(
-  otrosProyectos.map(async (p) => ({ proyecto: p, servicioRef: await getEntry(p.data.servicio) })),
+  otrosProyectos.map(async (p) => ({ proyecto: p, servicioRef: await getEntry('servicios', p.data.servicio) })),
 );
 
 const crumbs: Crumb[] = [
@@ -108,18 +108,30 @@ const ficha = [
       </div>
 
       <figure class="mt-8 overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
-        <Image
-          src={data.cover}
-          alt={data.coverAlt}
-          widths={[640, 960, 1280, 1600]}
-          sizes="(min-width: 1280px) 1200px, 96vw"
-          loading="eager"
-          fetchpriority="high"
-          decoding="sync"
-          format="webp"
-          quality={76}
-          class="aspect-3/2 size-full object-cover"
-        />
+        {typeof data.cover === 'string' ? (
+          <img
+            src={data.cover}
+            alt={data.coverAlt}
+            width={1600}
+            height={1067}
+            loading="eager"
+            decoding="sync"
+            class="aspect-3/2 size-full object-cover"
+          />
+        ) : (
+          <Image
+            src={data.cover}
+            alt={data.coverAlt}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(min-width: 1280px) 1200px, 96vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            format="webp"
+            quality={76}
+            class="aspect-3/2 size-full object-cover"
+          />
+        )}
         <figcaption class="bg-brand-900 px-5 py-3 text-sm text-brand-100">
           {data.coverAlt}
         </figcaption>
