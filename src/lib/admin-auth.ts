@@ -85,13 +85,20 @@ export function clearSession(cookies: AstroCookies) {
 
 /**
  * Extrae las variables de Supabase del contexto de Cloudflare runtime.
- * En Cloudflare Pages, Astro.locals.runtime.env contiene las variables de entorno.
+ * En Cloudflare Pages SSR, las variables están en Astro.locals.runtime.env.
+ * NO usar import.meta.env aquí porque Astro lo resuelve en build time como ''.
  */
 export function getSupabaseEnv(locals: App.Locals): SupabaseEnv {
   const runtime = (locals as any).runtime;
-  const env = runtime?.env ?? {};
+  if (!runtime?.env?.SUPABASE_URL) {
+    throw new Error(
+      'SUPABASE_URL no encontrada en runtime.env. ' +
+      'Asegúrate de que está configurada en Cloudflare Pages → Settings → Environment variables ' +
+      '(tanto para Production como Preview).'
+    );
+  }
   return {
-    SUPABASE_URL: env.SUPABASE_URL ?? import.meta.env.SUPABASE_URL ?? '',
-    SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY ?? import.meta.env.SUPABASE_ANON_KEY ?? '',
+    SUPABASE_URL: runtime.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: runtime.env.SUPABASE_ANON_KEY,
   };
 }
