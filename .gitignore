@@ -9,8 +9,6 @@ dist/
 node_modules/
 
 # Entorno y secretos
-.env
-.env.*
 !.env.example
 .dev.vars
 .wrangler/
