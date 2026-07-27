@@ -1,0 +1,64 @@
+---
+/**
+ * Button.astro — renderiza <a> o <button> según se pase `href`.
+ * Alturas mínimas de 44px (WCAG 2.5.5 target size) y contraste AA en todas
+ * las variantes.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'type'> {
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  type?: 'button' | 'submit' | 'reset';
+  full?: boolean;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  full = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-colors duration-200 ease-[var(--ease-out-soft)] no-underline';
+
+const variants: Record<Variant, string> = {
+  // accent-700 sobre blanco = 5,8:1 → cumple WCAG AA para texto normal.
+  // accent-600 se queda en 3,9:1 y solo se usa en iconos y elementos gráficos.
+  primary: 'bg-accent-700 text-white hover:bg-accent-800 active:bg-accent-800',
+  secondary: 'bg-brand-900 text-white hover:bg-brand-800 active:bg-brand-950',
+  outline:
+    'border-2 border-brand-900 text-brand-900 bg-white hover:bg-brand-50 active:bg-brand-100',
+  ghost: 'text-brand-800 hover:bg-brand-50 hover:text-brand-900',
+};
+
+const sizes: Record<Size, string> = {
+  sm: 'min-h-11 px-4 text-sm',
+  md: 'min-h-12 px-6 text-base',
+  lg: 'min-h-14 px-8 text-lg',
+};
+
+const classes = [base, variants[variant], sizes[size], full ? 'w-full' : '', className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+{
+  href ? (
+    <a href={href} class={classes} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

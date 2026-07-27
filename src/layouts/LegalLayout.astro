@@ -1,0 +1,37 @@
+---
+/**
+ * LegalLayout.astro — páginas legales.
+ * Indexables (aportan confianza y son señal de negocio real para Google) pero
+ * con prioridad baja en el sitemap.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import type { Crumb } from '@lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  path: string;
+  updatedAt: string;
+}
+
+const { title, description, heading, path, updatedAt } = Astro.props;
+const crumbs: Crumb[] = [{ name: heading, href: path }];
+---
+
+<BaseLayout title={title} description={description} crumbs={crumbs} modifiedTime={updatedAt}>
+  <PageHeader eyebrow="Información legal" title={heading}>
+    <p class="mt-4 text-sm text-muted">
+      Última actualización: <time datetime={updatedAt}>{
+        new Intl.DateTimeFormat('es-ES', { dateStyle: 'long' }).format(new Date(updatedAt))
+      }</time>
+    </p>
+  </PageHeader>
+
+  <div class="container-page py-12 lg:py-16">
+    <div class="rich-text max-w-3xl">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

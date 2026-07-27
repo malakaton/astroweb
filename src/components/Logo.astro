@@ -1,0 +1,56 @@
+---
+import { SITE } from '@config';
+
+interface Props {
+  /** En el footer el logo va sobre fondo oscuro */
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+
+const { tone = 'dark', class: className = '' } = Astro.props;
+---
+
+<span class:list={['inline-flex items-center gap-2.5', className]}>
+  <svg
+    width="36"
+    height="36"
+    viewBox="0 0 36 36"
+    aria-hidden="true"
+    focusable="false"
+    class="shrink-0"
+  >
+    <rect
+      width="36"
+      height="36"
+      rx="9"
+      fill={tone === 'dark' ? 'var(--color-brand-900)' : '#ffffff'}></rect>
+    <path
+      d="M8 20.5 18 11l10 9.5"
+      fill="none"
+      stroke={tone === 'dark' ? '#ffffff' : 'var(--color-brand-900)'}
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+    <path
+      d="M14.5 26v-5.5h7V26"
+      fill="none"
+      stroke="var(--color-accent-500)"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+  <span class="flex flex-col leading-none">
+    <span
+      class:list={[
+        'text-lg font-extrabold tracking-tight',
+        tone === 'dark' ? 'text-brand-900' : 'text-white',
+      ]}>{SITE.name}</span
+    >
+    <span
+      class:list={[
+        'text-[0.7rem] font-semibold tracking-[0.18em] uppercase',
+        tone === 'dark' ? 'text-accent-700' : 'text-accent-300',
+      ]}>Reformas integrales</span
+    >
+  </span>
+</span>

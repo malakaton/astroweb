@@ -1,0 +1,66 @@
+---
+import LegalLayout from '@layouts/LegalLayout.astro';
+import { BUSINESS } from '@config';
+---
+
+<LegalLayout
+  title="Política de cookies"
+  description="Este sitio web no utiliza cookies de análisis, publicidad ni seguimiento de terceros. Información sobre almacenamiento local y servicios externos enlazados."
+  heading="Política de cookies"
+  path="/politica-de-cookies"
+  updatedAt="2025-11-18"
+>
+  <h2>1. Este sitio no utiliza cookies de seguimiento</h2>
+  <p>
+    Esta web es un sitio estático: no instala cookies de análisis, publicidad, redes sociales ni
+    seguimiento de terceros. Por ese motivo no verás ningún banner de consentimiento, ya que la
+    normativa solo exige consentimiento previo para cookies no exentas.
+  </p>
+
+  <h2>2. Cookies técnicas exentas de consentimiento</h2>
+  <p>
+    El proveedor de infraestructura (Cloudflare) puede utilizar cookies estrictamente técnicas de
+    seguridad y balanceo de carga, necesarias para prestar el servicio de entrega de la página y
+    exentas de consentimiento conforme al artículo 22.2 de la LSSI.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Cookie</th>
+        <th scope="col">Titular</th>
+        <th scope="col">Finalidad</th>
+        <th scope="col">Duración</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">__cf_bm</th>
+        <td>Cloudflare, Inc.</td>
+        <td>Detección de tráfico automatizado y protección del formulario frente a abuso</td>
+        <td>30 minutos</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Servicios de terceros enlazados</h2>
+  <p>
+    Los enlaces a Google Maps, WhatsApp o redes sociales abren sitios externos que aplican sus
+    propias políticas de cookies. No incrustamos mapas, vídeos ni widgets de terceros en nuestras
+    páginas, precisamente para no transferir tus datos sin tu intervención.
+  </p>
+
+  <h2>4. Cómo gestionar las cookies en tu navegador</h2>
+  <p>
+    Puedes bloquear o eliminar las cookies desde la configuración de privacidad de tu navegador
+    (Chrome, Firefox, Safari, Edge). El bloqueo de cookies técnicas podría afectar al envío del
+    formulario de contacto.
+  </p>
+
+  <h2>5. Cambios en esta política</h2>
+  <p>
+    Si en el futuro incorporamos herramientas de medición, actualizaremos esta política y
+    solicitaremos tu consentimiento previo mediante un sistema de gestión del consentimiento antes
+    de instalar cualquier cookie no exenta. Para cualquier duda puedes escribirnos a
+    <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>.
+  </p>
+</LegalLayout>

@@ -1,0 +1,147 @@
+---
+import Logo from '@components/Logo.astro';
+import Icon from '@components/Icon.astro';
+import { BUSINESS, LEGAL_NAV, NAV, SITE, mailHref, telHref } from '@config';
+import { getCollection } from 'astro:content';
+
+/**
+ * Footer.astro — NAP (Name, Address, Phone) consistente con el JSON-LD:
+ * la coherencia entre el NAP visible y el marcado estructurado es un factor
+ * clásico de SEO local.
+ */
+const servicios = (await getCollection('servicios'))
+  .filter((s) => !s.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const year = new Date().getFullYear();
+
+const social = [
+  { name: 'Instagram', href: BUSINESS.social.instagram, icon: 'instagram' },
+  { name: 'Facebook', href: BUSINESS.social.facebook, icon: 'facebook' },
+  { name: 'LinkedIn', href: BUSINESS.social.linkedin, icon: 'linkedin' },
+] as const;
+---
+
+<footer class="bg-brand-900 text-brand-100">
+  <div class="container-page py-14 lg:py-16">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <Logo tone="light" />
+        <p class="mt-4 text-sm leading-relaxed text-brand-200">
+          Empresa de reformas integrales en Madrid desde {new Date(BUSINESS.foundingDate).getFullYear()}.
+          Presupuesto cerrado, plazos garantizados y {BUSINESS.stats.warrantyYears} años de garantía
+          por escrito.
+        </p>
+        <ul class="mt-5 flex gap-2">
+          {
+            social.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  rel="noopener noreferrer me"
+                  target="_blank"
+                  class="flex size-11 items-center justify-center rounded-lg bg-brand-800 text-white transition-colors hover:bg-brand-700"
+                >
+                  <Icon name={item.icon} size={20} title={item.name} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <nav aria-labelledby="footer-nav-servicios">
+        <h2 id="footer-nav-servicios" class="text-sm font-bold tracking-[0.14em] text-white uppercase">
+          Servicios
+        </h2>
+        <ul class="mt-4 space-y-1.5 text-sm">
+          {
+            servicios.map((servicio) => (
+              <li>
+                <a
+                  href={`/servicios/${servicio.id}`}
+                  class="inline-block rounded py-1 text-brand-200 hover:text-white hover:underline"
+                >
+                  {servicio.data.shortTitle ?? servicio.data.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-nav-web">
+        <h2 id="footer-nav-web" class="text-sm font-bold tracking-[0.14em] text-white uppercase">
+          Web
+        </h2>
+        <ul class="mt-4 space-y-1.5 text-sm">
+          {
+            NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="inline-block rounded py-1 text-brand-200 hover:text-white hover:underline"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          {
+            LEGAL_NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="inline-block rounded py-1 text-brand-200 hover:text-white hover:underline"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-sm font-bold tracking-[0.14em] text-white uppercase">Contacto</h2>
+        <address class="mt-4 space-y-3 text-sm not-italic">
+          <p class="flex items-start gap-2.5">
+            <Icon name="map-pin" size={18} class="mt-0.5 shrink-0 text-accent-300" />
+            <span>
+              {BUSINESS.address.street}<br />
+              {BUSINESS.address.postalCode} {BUSINESS.address.city}
+            </span>
+          </p>
+          <p class="flex items-center gap-2.5">
+            <Icon name="phone" size={18} class="shrink-0 text-accent-300" />
+            <a href={telHref} class="rounded font-semibold text-white hover:underline"
+              >{BUSINESS.phoneHuman}</a
+            >
+          </p>
+          <p class="flex items-center gap-2.5">
+            <Icon name="mail" size={18} class="shrink-0 text-accent-300" />
+            <a href={mailHref} class="rounded break-all hover:text-white hover:underline"
+              >{BUSINESS.email}</a
+            >
+          </p>
+          <p class="flex items-start gap-2.5">
+            <Icon name="clock" size={18} class="mt-0.5 shrink-0 text-accent-300" />
+            <span>
+              Lunes a jueves: 8:30 – 19:00<br />
+              Viernes: 8:30 – 15:00
+            </span>
+          </p>
+        </address>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-3 border-t border-brand-800 pt-6 text-xs text-brand-300 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {SITE.legalName} · CIF {BUSINESS.vatId} · Todos los derechos reservados.</p>
+      <p>
+        Zonas de trabajo: {BUSINESS.areaServed.join(' · ')}
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,303 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/Hero.astro';
+import Section from '@components/Section.astro';
+import Stats from '@components/Stats.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import Process from '@components/Process.astro';
+import Testimonials from '@components/Testimonials.astro';
+import type { Testimonial } from '@lib/types';
+import Faq from '@components/Faq.astro';
+import CtaBanner from '@components/CtaBanner.astro';
+import Icon from '@components/Icon.astro';
+import Button from '@components/Button.astro';
+import heroImage from '@assets/hero-reformas.webp';
+import { BUSINESS } from '@config';
+import { faqPage, type FaqItem } from '@lib/schema';
+import { getCollection, getEntry } from 'astro:content';
+
+const servicios = (await getCollection('servicios'))
+  .filter((s) => !s.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const proyectosDestacados = (await getCollection('proyectos'))
+  .filter((p) => !p.data.draft && p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+/** Resolvemos la referencia al servicio antes del render (sin promesas en el template) */
+const destacadosConServicio = await Promise.all(
+  proyectosDestacados.map(async (proyecto) => ({
+    proyecto,
+    servicio: await getEntry(proyecto.data.servicio),
+  })),
+);
+
+/** Testimonios extraídos de los proyectos reales: una sola fuente de datos */
+const proyectosConTestimonio = (await getCollection('proyectos')).filter(
+  (p) => !p.data.draft && p.data.testimonial,
+);
+
+const testimonios: Testimonial[] = proyectosConTestimonio.slice(0, 3).map((p) => ({
+  quote: p.data.testimonial!.quote,
+  author: p.data.testimonial!.author,
+  role: p.data.testimonial!.role,
+  rating: p.data.testimonial!.rating,
+  location: p.data.location,
+}));
+
+const ventajas = [
+  {
+    icon: 'file-text',
+    title: 'Presupuesto cerrado por partidas',
+    text: 'Sabes qué material se instala y cuánto cuesta cada capítulo antes de empezar. Si no cambias el alcance, no cambia el precio.',
+  },
+  {
+    icon: 'clock',
+    title: 'Plazo comprometido en contrato',
+    text: 'Calendario por semanas con fecha de entrega firmada y penalización por retraso injustificado.',
+  },
+  {
+    icon: 'users',
+    title: 'Equipo propio, no subcontratas',
+    text: 'Albañiles, fontaneros, electricistas y carpinteros de la casa. Un jefe de obra como único interlocutor.',
+  },
+  {
+    icon: 'shield',
+    title: `${BUSINESS.stats.warrantyYears} años de garantía`,
+    text: 'Garantía por escrito sobre instalaciones y acabados, más el seguro de responsabilidad civil de la obra.',
+  },
+  {
+    icon: 'euro',
+    title: 'Financiación hasta 60 meses',
+    text: 'Estudiamos la financiación de la obra sin coste añadido para que no descapitalices tus ahorros.',
+  },
+  {
+    icon: 'check-circle',
+    title: 'Licencias y certificados incluidos',
+    text: 'Tramitamos declaración responsable o licencia de obra y entregamos todos los boletines al finalizar.',
+  },
+] as const;
+
+const pasos = [
+  {
+    icon: 'phone',
+    title: 'Visita técnica gratuita',
+    description:
+      'Vamos a tu casa, medimos, revisamos instalaciones y te decimos qué es viable y qué no. Sin coste ni compromiso.',
+  },
+  {
+    icon: 'file-text',
+    title: 'Proyecto y presupuesto cerrado',
+    description:
+      'En 48-72 horas recibes planos de distribución y presupuesto desglosado con calidades concretas.',
+  },
+  {
+    icon: 'wrench',
+    title: 'Ejecución con control semanal',
+    description:
+      'Jefe de obra asignado, calendario por hitos y parte de avance con fotografías cada semana.',
+  },
+  {
+    icon: 'check-circle',
+    title: 'Entrega, repaso y garantía',
+    description:
+      'Revisión conjunta con lista de remates, limpieza final, certificados y 3 años de garantía.',
+  },
+] as const;
+
+const faqs: FaqItem[] = [
+  {
+    question: '¿Cuánto cuesta una reforma integral en Madrid en 2026?',
+    answer:
+      'Una reforma integral de calidad media-alta parte de 480 €/m². Para una vivienda de 90 m² el rango habitual es de 43.000 € a 68.000 €, incluyendo instalaciones nuevas, albañilería, carpintería, sanitarios y acabados. El precio final depende del estado de partida y del nivel de materiales.',
+  },
+  {
+    question: '¿El presupuesto es cerrado o puede subir durante la obra?',
+    answer:
+      'Es cerrado y desglosado por partidas. Solo cambia si tú modificas el alcance o si aparecen imprevistos ocultos (por ejemplo, una bajante en mal estado), y en ese caso se documenta y se aprueba por escrito antes de ejecutarlo.',
+  },
+  {
+    question: '¿Os encargáis de las licencias y los trámites?',
+    answer:
+      'Sí. Preparamos y presentamos la declaración responsable o la licencia de obra mayor, coordinamos al arquitecto cuando hay afectación estructural y entregamos los certificados de instalación al finalizar.',
+  },
+  {
+    question: '¿Cuánto tiempo tarda una reforma completa?',
+    answer:
+      'Entre 8 y 12 semanas en viviendas de 70 a 120 m² sin cambios estructurales. Un baño se resuelve en 10-15 días y una cocina en 3-4 semanas. La fecha comprometida figura en el contrato.',
+  },
+  {
+    question: '¿En qué zonas de Madrid trabajáis?',
+    answer: `Trabajamos en Madrid capital y en el área metropolitana: ${BUSINESS.areaServed.join(', ')}. Para obras fuera de estas zonas consúltanos y valoramos la viabilidad del desplazamiento.`,
+  },
+  {
+    question: '¿Puedo ver obras terminadas antes de decidir?',
+    answer:
+      'Sí. Te mostramos proyectos ejecutados con fotografías del antes y el después y, cuando el cliente lo autoriza, organizamos una visita a una obra en curso para que veas cómo trabajamos.',
+  },
+];
+
+const title = 'Reformas integrales en Madrid | Reformas Arana';
+const description =
+  'Empresa de reformas integrales en Madrid con 20 años de experiencia: presupuesto cerrado, plazos firmados y 3 años de garantía. Visita técnica gratuita.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image="/og/og-default.jpg"
+  imageAlt="Reformas Arana, empresa de reformas integrales en Madrid"
+  schemaNodes={[faqPage('/', faqs)]}
+>
+  <Hero
+    kicker={`${BUSINESS.stats.warrantyYears} años de garantía por escrito`}
+    title="Reformas integrales en Madrid, con presupuesto cerrado y plazos que se cumplen"
+    subtitle="Llevamos más de 20 años reformando viviendas y locales en Madrid con equipo propio, un único jefe de obra y un presupuesto que no cambia a mitad de camino."
+    image={heroImage}
+    imageAlt="Salón de vivienda reformada por Reformas Arana en Madrid"
+    bullets={[
+      'Visita técnica y presupuesto gratuitos',
+      'Presupuesto cerrado por partidas',
+      'Obra dirigida por un jefe de obra propio',
+      'Licencias y certificados incluidos',
+    ]}
+    secondaryCta={{ label: 'Ver proyectos reales', href: '/proyectos' }}
+  />
+
+  <Stats />
+
+  <Section
+    id="servicios"
+    eyebrow="Servicios"
+    title="Qué reformamos"
+    description="Reformas completas o intervenciones concretas, siempre con la misma metodología de control de obra y presupuesto cerrado."
+  >
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        servicios.map((servicio, index) => (
+          <li class="flex">
+            <ServiceCard
+              href={`/servicios/${servicio.id}`}
+              title={servicio.data.title}
+              excerpt={servicio.data.excerpt}
+              image={servicio.data.cover}
+              imageAlt={servicio.data.coverAlt}
+              icon={servicio.data.icon}
+              priceFrom={servicio.data.priceFrom}
+              priceUnit={servicio.data.priceUnit}
+              duration={servicio.data.duration}
+              eager={index < 3}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section
+    tone="muted"
+    eyebrow="Por qué Reformas Arana"
+    title="Lo que nos diferencia de un presupuesto barato"
+    description="En una reforma el problema nunca es el precio inicial: son los sobrecostes, los retrasos y la falta de un responsable. Así lo resolvemos."
+  >
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        ventajas.map((ventaja) => (
+          <li class="rounded-[var(--radius-card)] border border-brand-100 bg-white p-6 shadow-[var(--shadow-card)]">
+            <span
+              class="flex size-12 items-center justify-center rounded-lg bg-brand-50 text-brand-900"
+              aria-hidden="true"
+            >
+              <Icon name={ventaja.icon} size={24} />
+            </span>
+            <h3 class="mt-4 text-lg">{ventaja.title}</h3>
+            <p class="mt-2 text-[0.975rem] text-muted">{ventaja.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section
+    eyebrow="Método de trabajo"
+    title="Cómo funciona una reforma con nosotros"
+    description="Cuatro fases con entregables claros. En cada una sabes qué va a pasar, cuándo y cuánto cuesta."
+  >
+    <Process steps={pasos} />
+  </Section>
+
+  <Section
+    tone="muted"
+    eyebrow="Proyectos"
+    title="Obras terminadas en Madrid"
+    description="Casos reales con superficie, plazo y presupuesto orientativo para que puedas comparar con tu propio proyecto."
+  >
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        destacadosConServicio.map(({ proyecto, servicio }) => (
+          <li class="flex">
+            <ProjectCard
+              href={`/proyectos/${proyecto.id}`}
+              title={proyecto.data.title}
+              excerpt={proyecto.data.excerpt}
+              image={proyecto.data.cover}
+              imageAlt={proyecto.data.coverAlt}
+              location={proyecto.data.location}
+              year={proyecto.data.year}
+              surface={proyecto.data.surface}
+              duration={proyecto.data.duration}
+              serviceLabel={servicio?.data.shortTitle ?? servicio?.data.title}
+            />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mt-10">
+      <Button href="/proyectos" variant="outline">
+        Ver todos los proyectos
+        <Icon name="arrow-right" size={20} />
+      </Button>
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Opiniones"
+    title="Lo que dicen nuestros clientes"
+    description={`${BUSINESS.stats.ratingValue} de valoración media sobre ${BUSINESS.stats.reviewCount} reseñas verificadas.`}
+  >
+    <Testimonials items={testimonios} />
+  </Section>
+
+  <Section
+    tone="muted"
+    id="preguntas-frecuentes"
+    eyebrow="Preguntas frecuentes"
+    title="Dudas habituales antes de reformar"
+  >
+    <div class="max-w-3xl">
+      <Faq items={faqs} openFirst />
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Zona de trabajo"
+    title="Reformas en Madrid y área metropolitana"
+    description="Trabajamos con equipo propio, así que limitamos el radio de acción para poder garantizar los plazos."
+    spacing="md"
+  >
+    <ul class="flex flex-wrap gap-2.5">
+      {
+        BUSINESS.areaServed.map((zona) => (
+          <li class="flex items-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-800">
+            <Icon name="map-pin" size={16} class="text-accent-700" />
+            {zona}
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <CtaBanner />
+</BaseLayout>

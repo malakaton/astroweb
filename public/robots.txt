@@ -1,0 +1,12 @@
+# robots.txt — https://www.reformasarana.es
+User-agent: *
+Allow: /
+
+# Páginas sin valor para búsqueda (agradecimiento tras formulario)
+Disallow: /contacto/gracias
+
+# Evita rastreo de parámetros de campañas
+Disallow: /*?utm_
+Disallow: /*?gclid=
+
+Sitemap: https://www.reformasarana.es/sitemap-index.xml

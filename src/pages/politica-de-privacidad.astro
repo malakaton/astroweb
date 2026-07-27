@@ -1,0 +1,114 @@
+---
+import LegalLayout from '@layouts/LegalLayout.astro';
+import { BUSINESS, SITE } from '@config';
+---
+
+<LegalLayout
+  title="Política de privacidad"
+  description="Información sobre el tratamiento de datos personales en Reformas Arana S.L. conforme al RGPD y a la LOPDGDD: finalidades, base jurídica, plazos y derechos."
+  heading="Política de privacidad"
+  path="/politica-de-privacidad"
+  updatedAt="2025-11-18"
+>
+  <p>
+    {SITE.legalName} trata los datos personales que nos facilitas con total confidencialidad y
+    conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 de Protección de Datos
+    Personales y garantía de los derechos digitales (LOPDGDD).
+  </p>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <ul>
+    <li><strong>Identidad:</strong> {SITE.legalName} (CIF {BUSINESS.vatId})</li>
+    <li>
+      <strong>Dirección:</strong> {BUSINESS.address.street}, {BUSINESS.address.postalCode}
+      {BUSINESS.address.city}
+    </li>
+    <li><strong>Teléfono:</strong> {BUSINESS.phoneHuman}</li>
+    <li>
+      <strong>Contacto en materia de datos:</strong>
+      <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+    </li>
+  </ul>
+
+  <h2>2. Datos que tratamos y finalidad</h2>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Finalidad</th>
+        <th scope="col">Datos</th>
+        <th scope="col">Base jurídica</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Responder a solicitudes de presupuesto y visita técnica</th>
+        <td>Nombre, email, teléfono, localidad, datos del proyecto</td>
+        <td>Consentimiento del interesado (art. 6.1.a RGPD)</td>
+      </tr>
+      <tr>
+        <th scope="row">Elaboración y seguimiento del presupuesto y del contrato de obra</th>
+        <td>Datos de contacto, dirección de la obra, documentación técnica</td>
+        <td>Ejecución de un contrato o medidas precontractuales (art. 6.1.b)</td>
+      </tr>
+      <tr>
+        <th scope="row">Cumplimiento de obligaciones fiscales, contables y de garantía</th>
+        <td>Datos de facturación</td>
+        <td>Obligación legal (art. 6.1.c)</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    No utilizamos tus datos para elaborar perfiles ni tomamos decisiones automatizadas. No enviamos
+    comunicaciones comerciales salvo que lo solicites expresamente.
+  </p>
+
+  <h2>3. Plazo de conservación</h2>
+  <p>
+    Los datos de solicitudes de presupuesto que no se convierten en obra se conservan un máximo de
+    12 meses. Los datos vinculados a una obra contratada se conservan durante la vigencia de la
+    relación y, después, durante los plazos legales de prescripción fiscal (4 años) y de
+    responsabilidad por vicios de construcción según la Ley de Ordenación de la Edificación.
+  </p>
+
+  <h2>4. Destinatarios y encargados del tratamiento</h2>
+  <p>
+    No cedemos datos a terceros con fines comerciales. Únicamente acceden a ellos los proveedores
+    necesarios para prestar el servicio, con contrato de encargo de tratamiento firmado:
+  </p>
+  <ul>
+    <li>Proveedor de alojamiento y CDN del sitio web (Cloudflare, Inc.).</li>
+    <li>Proveedor de base de datos y correo transaccional para gestionar las solicitudes.</li>
+    <li>Asesoría fiscal y contable, cuando resulte legalmente necesario.</li>
+    <li>Técnicos colaboradores (arquitecto, ingeniero) cuando el proyecto lo requiera.</li>
+  </ul>
+  <p>
+    Algunos proveedores pueden realizar transferencias internacionales de datos amparadas en
+    decisiones de adecuación o en cláusulas contractuales tipo de la Comisión Europea.
+  </p>
+
+  <h2>5. Tus derechos</h2>
+  <p>
+    Puedes ejercer los derechos de acceso, rectificación, supresión, limitación del tratamiento,
+    oposición y portabilidad escribiendo a
+    <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>, indicando el derecho que ejerces y
+    acreditando tu identidad. También puedes retirar tu consentimiento en cualquier momento.
+  </p>
+  <p>
+    Si consideras que no hemos atendido correctamente tu solicitud, puedes presentar una reclamación
+    ante la Agencia Española de Protección de Datos (<span>www.aepd.es</span>).
+  </p>
+
+  <h2>6. Seguridad</h2>
+  <p>
+    El sitio web se sirve íntegramente por HTTPS. Los datos de los formularios se transmiten
+    cifrados y se almacenan en infraestructura con control de acceso, cifrado en reposo y registro
+    de accesos. Aplicamos el principio de minimización: solo pedimos los datos imprescindibles para
+    valorar tu proyecto.
+  </p>
+
+  <h2>7. Menores de edad</h2>
+  <p>
+    Los formularios de este sitio están dirigidos a personas mayores de 18 años. No recabamos de
+    forma consciente datos de menores.
+  </p>
+</LegalLayout>

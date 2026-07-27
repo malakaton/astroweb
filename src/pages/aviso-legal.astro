@@ -1,0 +1,99 @@
+---
+import LegalLayout from '@layouts/LegalLayout.astro';
+import { BUSINESS, SITE } from '@config';
+---
+
+<LegalLayout
+  title="Aviso legal"
+  description="Aviso legal e información sobre el titular del sitio web de Reformas Arana S.L., conforme a la Ley 34/2002 de servicios de la sociedad de la información."
+  heading="Aviso legal"
+  path="/aviso-legal"
+  updatedAt="2025-11-18"
+>
+  <h2>1. Datos identificativos del titular</h2>
+  <p>
+    En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad
+    de la Información y de Comercio Electrónico (LSSI-CE), se informa de los siguientes datos:
+  </p>
+  <ul>
+    <li><strong>Titular:</strong> {SITE.legalName}</li>
+    <li><strong>CIF:</strong> {BUSINESS.vatId}</li>
+    <li>
+      <strong>Domicilio social:</strong> {BUSINESS.address.street}, {BUSINESS.address.postalCode}
+      {BUSINESS.address.city} ({BUSINESS.address.region})
+    </li>
+    <li><strong>Teléfono:</strong> {BUSINESS.phoneHuman}</li>
+    <li><strong>Correo electrónico:</strong> {BUSINESS.email}</li>
+    <li><strong>Sitio web:</strong> {SITE.url}</li>
+  </ul>
+
+  <h2>2. Objeto</h2>
+  <p>
+    El presente aviso legal regula el acceso y la utilización del sitio web, cuya finalidad es
+    informar sobre los servicios de reforma y rehabilitación de edificación que presta el titular,
+    así como facilitar el contacto comercial con clientes potenciales.
+  </p>
+  <p>
+    El acceso al sitio web es gratuito y atribuye la condición de usuario, lo que implica la
+    aceptación plena de las condiciones recogidas en este aviso legal desde el momento del acceso.
+  </p>
+
+  <h2>3. Condiciones de uso</h2>
+  <p>El usuario se compromete a:</p>
+  <ul>
+    <li>Utilizar el sitio web conforme a la ley, la buena fe y el orden público.</li>
+    <li>
+      No introducir ni difundir contenidos que puedan resultar difamatorios, discriminatorios o que
+      vulneren derechos de terceros.
+    </li>
+    <li>
+      No realizar acciones que puedan dañar, sobrecargar o impedir el normal funcionamiento del
+      sitio web, ni intentar acceder a sistemas o datos restringidos.
+    </li>
+    <li>Facilitar información veraz en los formularios de contacto.</li>
+  </ul>
+
+  <h2>4. Propiedad intelectual e industrial</h2>
+  <p>
+    Todos los contenidos del sitio web (textos, fotografías de obras propias, diseño gráfico,
+    código fuente, logotipos y marcas) son titularidad de {SITE.legalName} o de terceros que han
+    autorizado su uso, y están protegidos por la normativa de propiedad intelectual e industrial.
+  </p>
+  <p>
+    Queda prohibida su reproducción, distribución, comunicación pública o transformación sin
+    autorización expresa y por escrito del titular, salvo el uso privado y personal del usuario.
+  </p>
+
+  <h2>5. Exclusión de responsabilidad</h2>
+  <p>
+    Los precios y plazos publicados son orientativos y no constituyen una oferta contractual: el
+    presupuesto vinculante se emite siempre por escrito tras la visita técnica. El titular no se
+    responsabiliza de las decisiones adoptadas a partir de la información general del sitio web.
+  </p>
+  <p>
+    El titular no garantiza la ausencia de interrupciones o errores en el acceso al sitio web, si
+    bien adoptará las medidas técnicas razonables para evitarlos, y no se responsabiliza de los
+    contenidos de sitios de terceros enlazados desde estas páginas.
+  </p>
+
+  <h2>6. Enlaces</h2>
+  <p>
+    El sitio web puede incluir enlaces a páginas de terceros (redes sociales, servicios de mapas).
+    El titular no controla dichos sitios ni sus contenidos y no asume responsabilidad alguna
+    derivada de su uso.
+  </p>
+
+  <h2>7. Legislación aplicable y jurisdicción</h2>
+  <p>
+    La relación entre el titular y el usuario se rige por la legislación española. Para la
+    resolución de cualquier controversia, las partes se someten a los juzgados y tribunales del
+    domicilio del usuario cuando este tenga la condición de consumidor.
+  </p>
+
+  <h2>8. Resolución de conflictos y reclamaciones</h2>
+  <p>
+    Puedes dirigir cualquier reclamación a <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>.
+    Como consumidor, tienes derecho a acudir a los servicios de consumo de la Comunidad de Madrid o
+    a la plataforma europea de resolución de litigios en línea.
+  </p>
+</LegalLayout>

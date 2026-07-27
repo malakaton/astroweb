@@ -1,0 +1,86 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Section from '@components/Section.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import Stats from '@components/Stats.astro';
+import CtaBanner from '@components/CtaBanner.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { canonicalUrl } from '@lib/seo';
+import type { Crumb, JsonLdNode } from '@lib/schema';
+
+const proyectos = (await getCollection('proyectos'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const proyectosConServicio = await Promise.all(
+  proyectos.map(async (proyecto) => ({
+    proyecto,
+    servicio: await getEntry(proyecto.data.servicio),
+  })),
+);
+
+const crumbs: Crumb[] = [{ name: 'Proyectos', href: '/proyectos' }];
+
+/** ItemList: ayuda a Google a entender el listado y sus elementos */
+const itemList: JsonLdNode = {
+  '@type': 'ItemList',
+  '@id': `${canonicalUrl('/proyectos')}#lista`,
+  name: 'Proyectos de reformas ejecutados',
+  numberOfItems: proyectos.length,
+  itemListElement: proyectos.map((proyecto, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: proyecto.data.title,
+    url: canonicalUrl(`/proyectos/${proyecto.id}`),
+  })),
+};
+---
+
+<BaseLayout
+  title="Proyectos de reformas en Madrid"
+  description="Reformas ejecutadas en Madrid: pisos, áticos, cocinas, baños, locales y fachadas con superficie, plazo real y presupuesto orientativo de cada obra."
+  crumbs={crumbs}
+  image="/og/og-proyectos.jpg"
+  imageAlt="Proyectos de reformas ejecutados por Reformas Arana"
+  pageType="CollectionPage"
+  schemaNodes={[itemList]}
+>
+  <PageHeader
+    eyebrow="Proyectos"
+    title="Reformas que ya hemos entregado"
+    description="Cada ficha incluye superficie, plazo real de ejecución y rango de presupuesto. Es la forma más honesta de que compares con tu propio proyecto antes de pedirnos nada."
+  />
+
+  <Section spacing="lg">
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        proyectosConServicio.map(({ proyecto, servicio }, index) => (
+          <li class="flex">
+            <ProjectCard
+              href={`/proyectos/${proyecto.id}`}
+              title={proyecto.data.title}
+              excerpt={proyecto.data.excerpt}
+              image={proyecto.data.cover}
+              imageAlt={proyecto.data.coverAlt}
+              location={proyecto.data.location}
+              year={proyecto.data.year}
+              surface={proyecto.data.surface}
+              duration={proyecto.data.duration}
+              serviceLabel={servicio?.data.shortTitle ?? servicio?.data.title}
+              eager={index < 3}
+              headingLevel="h2"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Stats tone="brand" />
+
+  <CtaBanner
+    title="¿Tu proyecto se parece a alguno de estos?"
+    description="Envíanos fotos y medidas aproximadas y te damos una primera orientación de presupuesto antes de la visita técnica."
+  />
+</BaseLayout>

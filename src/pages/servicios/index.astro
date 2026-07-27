@@ -1,0 +1,152 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Section from '@components/Section.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import Process from '@components/Process.astro';
+import CtaBanner from '@components/CtaBanner.astro';
+import Icon from '@components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { service, type Crumb } from '@lib/schema';
+
+const servicios = (await getCollection('servicios'))
+  .filter((s) => !s.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const crumbs: Crumb[] = [{ name: 'Servicios', href: '/servicios' }];
+
+/** Un nodo Service por cada servicio: refuerza la entidad en el grafo */
+const schemaNodes = servicios.map((s) =>
+  service({
+    slug: s.id,
+    name: s.data.title,
+    description: s.data.description,
+    priceFrom: s.data.priceFrom,
+  }),
+);
+
+const pasos = [
+  {
+    icon: 'phone',
+    title: 'Nos cuentas qué necesitas',
+    description: 'Por teléfono o formulario. Te hacemos las preguntas clave para orientarte ya en la primera llamada.',
+  },
+  {
+    icon: 'ruler',
+    title: 'Visita técnica y mediciones',
+    description: 'Comprobamos in situ instalaciones, estructura y estado real de partida. Gratis y sin compromiso.',
+  },
+  {
+    icon: 'file-text',
+    title: 'Presupuesto cerrado en 48-72 h',
+    description: 'Desglose por partidas con calidades concretas y plazo de ejecución comprometido.',
+  },
+  {
+    icon: 'wrench',
+    title: 'Obra con seguimiento semanal',
+    description: 'Jefe de obra asignado, parte de avance con fotos y garantía de 3 años al entregar.',
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Servicios de reformas en Madrid"
+  description="Reformas integrales, cocinas, baños, locales comerciales, fachadas e instalaciones en Madrid. Presupuesto cerrado por partidas y garantía de 3 años."
+  crumbs={crumbs}
+  image="/og/og-servicios.jpg"
+  imageAlt="Servicios de reformas de Reformas Arana en Madrid"
+  pageType="CollectionPage"
+  schemaNodes={schemaNodes}
+>
+  <PageHeader
+    eyebrow="Servicios"
+    title="Servicios de reformas en Madrid"
+    description="Seis líneas de trabajo con la misma metodología: visita técnica, presupuesto cerrado por partidas, jefe de obra propio y garantía por escrito. Elige el servicio y consulta plazos, precios de referencia y lo que incluye."
+  />
+
+  <Section spacing="lg">
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        servicios.map((servicioItem, index) => (
+          <li class="flex">
+            <ServiceCard
+              href={`/servicios/${servicioItem.id}`}
+              title={servicioItem.data.title}
+              excerpt={servicioItem.data.excerpt}
+              image={servicioItem.data.cover}
+              imageAlt={servicioItem.data.coverAlt}
+              icon={servicioItem.data.icon}
+              priceFrom={servicioItem.data.priceFrom}
+              priceUnit={servicioItem.data.priceUnit}
+              duration={servicioItem.data.duration}
+              eager={index < 3}
+              headingLevel="h2"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section
+    tone="muted"
+    eyebrow="Cómo trabajamos"
+    title="El mismo proceso en todos los servicios"
+    description="Lo que evita sobrecostes no es el precio de salida, es el control del proceso."
+  >
+    <Process steps={pasos} />
+  </Section>
+
+  <Section
+    eyebrow="Precios de referencia"
+    title="Qué presupuesto necesitas para cada reforma"
+    description="Rangos orientativos con calidades medias-altas en Madrid. El presupuesto definitivo siempre se cierra tras la visita técnica."
+    spacing="md"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[36rem] border-collapse text-left text-sm">
+        <caption class="sr-only">
+          Precios de referencia por servicio, plazo estimado y precio de partida
+        </caption>
+        <thead>
+          <tr class="bg-brand-50">
+            <th scope="col" class="border border-brand-100 px-4 py-3 text-brand-900">Servicio</th>
+            <th scope="col" class="border border-brand-100 px-4 py-3 text-brand-900">Desde</th>
+            <th scope="col" class="border border-brand-100 px-4 py-3 text-brand-900">Plazo medio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            servicios.map((servicioItem) => (
+              <tr>
+                <th scope="row" class="border border-brand-100 px-4 py-3 font-semibold">
+                  <a href={`/servicios/${servicioItem.id}`} class="text-brand-800 hover:underline">
+                    {servicioItem.data.shortTitle ?? servicioItem.data.title}
+                  </a>
+                </th>
+                <td class="border border-brand-100 px-4 py-3">
+                  {servicioItem.data.priceFrom
+                    ? `${servicioItem.data.priceFrom.toLocaleString('es-ES')} € / ${servicioItem.data.priceUnit}`
+                    : 'A consultar'}
+                </td>
+                <td class="border border-brand-100 px-4 py-3">
+                  {servicioItem.data.duration ?? 'Según proyecto'}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-4 flex items-start gap-2 text-sm text-muted">
+      <Icon name="file-text" size={18} class="mt-0.5 shrink-0 text-brand-500" />
+      Los importes no incluyen IVA ni mobiliario ni electrodomésticos, salvo que se indique en el
+      presupuesto.
+    </p>
+  </Section>
+
+  <CtaBanner
+    title="¿No sabes qué servicio necesitas?"
+    description="Cuéntanos qué quieres conseguir y te decimos qué intervención es necesaria, con qué plazo y con qué presupuesto."
+  />
+</BaseLayout>

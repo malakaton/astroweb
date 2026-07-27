@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Solo /api/* pasa por Pages Functions; el resto se sirve como estático desde el CDN sin invocar el runtime.",
+  "include": ["/api/*"],
+  "exclude": []
+}

@@ -1,0 +1,54 @@
+---
+import { BUSINESS } from '@config';
+
+interface Props {
+  tone?: 'muted' | 'brand';
+}
+
+const { tone = 'muted' } = Astro.props;
+
+const stats = [
+  { value: `${BUSINESS.stats.yearsOfExperience}+`, label: 'años reformando en Madrid' },
+  { value: `${BUSINESS.stats.projectsDelivered}+`, label: 'obras entregadas' },
+  { value: `${BUSINESS.stats.warrantyYears} años`, label: 'de garantía por escrito' },
+  {
+    value: BUSINESS.stats.ratingValue.toString().replace('.', ','),
+    label: `de valoración media en ${BUSINESS.stats.reviewCount} reseñas`,
+  },
+] as const;
+
+const isBrand = tone === 'brand';
+---
+
+<section
+  class:list={[isBrand ? 'bg-brand-900 text-white' : 'bg-brand-50 text-brand-900', 'py-10']}
+  aria-label="Datos de la empresa"
+>
+  <div class="container-page">
+    <dl class="grid grid-cols-2 gap-6 text-center lg:grid-cols-4">
+      {
+        stats.map((stat) => (
+          <div>
+            <dt class="sr-only">{stat.label}</dt>
+            <dd>
+              <span
+                class:list={[
+                  'block text-3xl font-extrabold sm:text-4xl',
+                  isBrand ? 'text-accent-300' : 'text-brand-900',
+                ]}
+              >
+                {stat.value}
+              </span>
+              <span
+                class:list={['mt-1 block text-sm', isBrand ? 'text-brand-100' : 'text-muted']}
+                aria-hidden="true"
+              >
+                {stat.label}
+              </span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

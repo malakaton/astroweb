@@ -1,0 +1,50 @@
+---
+/**
+ * PageHeader.astro — cabecera de páginas interiores.
+ * Contiene siempre el único <h1> del documento.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  tone?: 'white' | 'muted' | 'brand';
+}
+
+const { eyebrow, title, description, tone = 'muted' } = Astro.props;
+
+const tones = {
+  white: 'bg-white',
+  muted: 'bg-brand-50',
+  brand: 'bg-brand-900',
+} as const;
+
+const isBrand = tone === 'brand';
+---
+
+<div class:list={[tones[tone], 'py-12 sm:py-16']}>
+  <div class="container-page">
+    <div class="max-w-3xl">
+      {
+        eyebrow && (
+          <p
+            class:list={[
+              'mb-3 text-sm font-bold tracking-[0.14em] uppercase',
+              isBrand ? 'text-accent-300' : 'text-accent-700',
+            ]}
+          >
+            {eyebrow}
+          </p>
+        )
+      }
+      <h1 class:list={['text-4xl sm:text-5xl', isBrand && 'text-white']}>{title}</h1>
+      {
+        description && (
+          <p class:list={['mt-5 text-lg', isBrand ? 'text-brand-100' : 'text-muted']}>
+            {description}
+          </p>
+        )
+      }
+      <slot />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+# Build
+dist/
+.astro/
+.output/
+.vercel/
+.netlify/
+
+# Dependencias
+node_modules/
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Auditorías locales
+lighthouse-*.json
+lighthouse-*.html

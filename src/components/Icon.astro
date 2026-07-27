@@ -1,0 +1,40 @@
+---
+/**
+ * Icon.astro — iconos SVG inline.
+ * Sin librerías ni sprites remotos: cero requests extra y cero JavaScript.
+ * Por defecto son decorativos (`aria-hidden`); si se pasa `title` se exponen
+ * con role="img" y un <title> accesible.
+ */
+import { ICON_PATHS, type IconName } from '@lib/icons';
+
+interface Props {
+  name: IconName;
+  /** Tamaño en px (cuadrado) */
+  size?: number;
+  class?: string;
+  /** Si se indica, el icono deja de ser decorativo y se anuncia a lectores de pantalla */
+  title?: string;
+  strokeWidth?: number;
+}
+
+const { name, size = 24, class: className = '', title, strokeWidth = 1.75 } = Astro.props;
+const paths = ICON_PATHS[name];
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  {title && <title>{title}</title>}
+  {paths.map((d) => <path d={d} />)}
+</svg>

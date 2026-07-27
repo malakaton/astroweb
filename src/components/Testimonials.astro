@@ -1,0 +1,40 @@
+---
+import Icon from '@components/Icon.astro';
+import type { Testimonial } from '@lib/types';
+
+interface Props {
+  items: readonly Testimonial[];
+  columns?: 2 | 3;
+}
+
+const { items, columns = 3 } = Astro.props;
+---
+
+<ul
+  class:list={[
+    'grid gap-6',
+    columns === 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2',
+  ]}
+>
+  {
+    items.map((item) => (
+      <li class="flex flex-col rounded-[var(--radius-card)] border border-brand-100 bg-white p-6 shadow-[var(--shadow-card)]">
+        <p class="flex gap-0.5 text-accent-600">
+          <span class="sr-only">Valoración: {item.rating ?? 5} de 5 estrellas</span>
+          {Array.from({ length: item.rating ?? 5 }).map(() => (
+            <Icon name="star" size={18} class="fill-current" />
+          ))}
+        </p>
+        <blockquote class="mt-4 flex-1 text-[1.05rem] text-ink italic">
+          <p>«{item.quote}»</p>
+        </blockquote>
+        <footer class="mt-5 border-t border-brand-100 pt-4 text-sm">
+          <p class="font-bold text-brand-900">{item.author}</p>
+          {(item.role || item.location) && (
+            <p class="text-muted">{[item.role, item.location].filter(Boolean).join(' · ')}</p>
+          )}
+        </footer>
+      </li>
+    ))
+  }
+</ul>

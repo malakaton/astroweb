@@ -1,0 +1,23 @@
+{
+  "name": "Reformas Arana",
+  "short_name": "Reformas Arana",
+  "description": "Reformas integrales en Madrid con presupuesto cerrado y garantía.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#0f2a3f",
+  "lang": "es-ES",
+  "icons": [
+    {
+      "src": "/og/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

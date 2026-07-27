@@ -1,0 +1,127 @@
+---
+/**
+ * BaseLayout.astro — única plantilla del sitio.
+ *
+ * Concentra: <head> con SEO, grafo JSON-LD (LocalBusiness + WebSite + WebPage +
+ * BreadcrumbList + nodos extra de la página), skip link, header y footer.
+ * Las páginas solo declaran su contenido y sus metadatos.
+ */
+import '@/styles/global.css';
+import SEO from '@components/SEO.astro';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import { SITE } from '@config';
+import { normalizePath } from '@lib/seo';
+import {
+  breadcrumbList,
+  graph,
+  localBusiness,
+  logo,
+  webPage,
+  website,
+  type Crumb,
+  type JsonLdNode,
+  type WebPageInput,
+} from '@lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Migas de pan sin «Inicio» (se añade solo). Si se omite, no se renderizan. */
+  crumbs?: readonly Crumb[];
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  pageType?: WebPageInput['type'];
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** Nodos JSON-LD adicionales: Service, FAQPage, ItemList… */
+  schemaNodes?: readonly JsonLdNode[];
+  /** Oculta las migas visuales (p. ej. en la home) manteniendo el marcado */
+  hideBreadcrumbs?: boolean;
+  mainClass?: string;
+}
+
+const {
+  title,
+  description,
+  crumbs,
+  image,
+  imageAlt,
+  noindex = false,
+  ogType = 'website',
+  pageType = 'WebPage',
+  publishedTime,
+  modifiedTime,
+  schemaNodes = [],
+  hideBreadcrumbs = false,
+  mainClass = '',
+} = Astro.props;
+
+const path = normalizePath(Astro.url.pathname);
+const fullCrumbs: Crumb[] | undefined = crumbs
+  ? [{ name: 'Inicio', href: '/' }, ...crumbs]
+  : undefined;
+
+const jsonLd = graph([
+  localBusiness(),
+  logo(),
+  website(),
+  webPage({
+    path,
+    title,
+    description,
+    image,
+    datePublished: publishedTime,
+    dateModified: modifiedTime,
+    hasBreadcrumb: Boolean(fullCrumbs),
+    type: pageType,
+  }),
+  fullCrumbs ? breadcrumbList(path, fullCrumbs) : null,
+  ...schemaNodes,
+]);
+---
+
+<!doctype html>
+<html lang={SITE.lang} class="scroll-smooth">
+  <head>
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      imageAlt={imageAlt}
+      noindex={noindex}
+      ogType={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      jsonLd={jsonLd}
+    />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-brand-900 focus:px-5 focus:py-3 focus:font-semibold focus:text-white"
+      >Saltar al contenido principal</a
+    >
+
+    <Header />
+
+    <main id="contenido" class:list={['flex-1', mainClass]}>
+      {
+        crumbs && !hideBreadcrumbs && (
+          <div class="border-b border-brand-100 bg-brand-50">
+            <div class="container-page py-3">
+              <Breadcrumbs items={crumbs} />
+            </div>
+          </div>
+        )
+      }
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

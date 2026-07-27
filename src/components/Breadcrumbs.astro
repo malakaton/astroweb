@@ -1,0 +1,45 @@
+---
+/**
+ * Breadcrumbs.astro — migas de pan visuales.
+ * El JSON-LD BreadcrumbList equivalente lo emite BaseLayout a partir de los
+ * mismos datos, así que nunca se desincronizan.
+ */
+import type { Crumb } from '@lib/schema';
+
+interface Props {
+  /** No incluye «Inicio»: se añade aquí automáticamente */
+  items: readonly Crumb[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+const crumbs: Crumb[] = [{ name: 'Inicio', href: '/' }, ...items];
+---
+
+<nav aria-label="Ruta de navegación" class:list={['text-sm', className]}>
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
+    {
+      crumbs.map((crumb, index) => {
+        const isLast = index === crumbs.length - 1;
+        return (
+          <li class="flex items-center gap-2">
+            {index > 0 && (
+              <span aria-hidden="true" class="text-brand-300">
+                /
+              </span>
+            )}
+            {isLast ? (
+              <span aria-current="page" class="font-semibold text-brand-900">
+                {crumb.name}
+              </span>
+            ) : (
+              <a href={crumb.href} class="rounded hover:text-brand-900 hover:underline">
+                {crumb.name}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

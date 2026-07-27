@@ -1,0 +1,255 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import Faq from '@components/Faq.astro';
+import Icon from '@components/Icon.astro';
+import Button from '@components/Button.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import CtaBanner from '@components/CtaBanner.astro';
+import { BUSINESS, telHref } from '@config';
+import { EUR, formatDateEs } from '@lib/seo';
+import { faqPage, service, type Crumb, type JsonLdNode } from '@lib/schema';
+
+/** Una página estática por servicio publicado: URLs limpias tipo /servicios/reforma-de-banos */
+export const getStaticPaths = (async () => {
+  const servicios = await getCollection('servicios', ({ data }) => !data.draft);
+  return servicios.map((servicio) => ({
+    params: { slug: servicio.id },
+    props: { servicio },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { servicio } = Astro.props;
+const { data } = servicio;
+const { Content } = await render(servicio);
+
+/** Proyectos ejecutados de este servicio: enlazado interno temático */
+const proyectosRelacionados = (await getCollection('proyectos'))
+  .filter((p) => !p.data.draft && p.data.servicio.id === servicio.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const otrosServicios = (await getCollection('servicios'))
+  .filter((s) => !s.data.draft && s.id !== servicio.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const crumbs: Crumb[] = [
+  { name: 'Servicios', href: '/servicios' },
+  { name: data.shortTitle ?? data.title, href: `/servicios/${servicio.id}` },
+];
+
+const schemaNodes: JsonLdNode[] = [
+  service({
+    slug: servicio.id,
+    name: data.title,
+    description: data.description,
+    priceFrom: data.priceFrom,
+  }),
+];
+if (data.faqs.length > 0) {
+  schemaNodes.push(faqPage(`/servicios/${servicio.id}`, data.faqs));
+}
+
+const relacionadosConServicio = await Promise.all(
+  proyectosRelacionados.map(async (proyecto) => ({
+    proyecto,
+    servicioRef: await getEntry(proyecto.data.servicio),
+  })),
+);
+---
+
+<BaseLayout
+  title={data.seoTitle ?? data.title}
+  description={data.description}
+  crumbs={crumbs}
+  image="/og/og-servicios.jpg"
+  imageAlt={data.coverAlt}
+  pageType="ItemPage"
+  modifiedTime={data.updatedAt.toISOString()}
+  schemaNodes={schemaNodes}
+>
+  <article>
+    <div class="bg-brand-50 py-12 sm:py-16">
+      <div class="container-page grid items-start gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          <p class="mb-3 flex items-center gap-2 text-sm font-bold tracking-[0.14em] text-accent-700 uppercase">
+            <Icon name={data.icon} size={18} />
+            Servicio
+          </p>
+          <h1 class="text-4xl sm:text-5xl">{data.title}</h1>
+          <p class="mt-5 text-lg text-muted">{data.excerpt}</p>
+
+          <ul class="mt-7 grid gap-2.5">
+            {
+              data.features.map((feature) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check-circle" size={20} class="mt-1 shrink-0 text-accent-600" />
+                  <span class="text-brand-900">{feature}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <Button href="/contacto" size="lg">
+              Pedir presupuesto gratis
+              <Icon name="arrow-right" size={20} />
+            </Button>
+            <Button href={telHref} variant="outline" size="lg">
+              <Icon name="phone" size={20} />
+              {BUSINESS.phoneHuman}
+            </Button>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
+          <Image
+            src={data.cover}
+            alt={data.coverAlt}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 1024px) 560px, 92vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            format="webp"
+            quality={76}
+            class="aspect-3/2 size-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="container-page grid gap-12 py-14 lg:grid-cols-[minmax(0,1fr)_20rem] lg:py-20">
+      <div class="rich-text max-w-none">
+        <Content />
+      </div>
+
+      <aside class="lg:sticky lg:top-24 lg:self-start" aria-label="Resumen del servicio">
+        <div class="rounded-[var(--radius-card)] border border-brand-100 bg-white p-6 shadow-[var(--shadow-card)]">
+          <h2 class="text-xl">Datos del servicio</h2>
+          <dl class="mt-4 space-y-3 text-sm">
+            {
+              data.priceFrom && (
+                <div class="flex items-baseline justify-between gap-3 border-b border-brand-100 pb-3">
+                  <dt class="text-muted">Precio desde</dt>
+                  <dd class="text-right font-bold text-brand-900">
+                    {EUR.format(data.priceFrom)} / {data.priceUnit}
+                  </dd>
+                </div>
+              )
+            }
+            {
+              data.duration && (
+                <div class="flex items-baseline justify-between gap-3 border-b border-brand-100 pb-3">
+                  <dt class="text-muted">Plazo estimado</dt>
+                  <dd class="text-right font-bold text-brand-900">{data.duration}</dd>
+                </div>
+              )
+            }
+            <div class="flex items-baseline justify-between gap-3 border-b border-brand-100 pb-3">
+              <dt class="text-muted">Garantía</dt>
+              <dd class="text-right font-bold text-brand-900">
+                {BUSINESS.stats.warrantyYears} años
+              </dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-muted">Zonas</dt>
+              <dd class="text-right font-semibold text-brand-900">Madrid y área metropolitana</dd>
+            </div>
+          </dl>
+
+          <h3 class="mt-6 text-base">Qué incluye</h3>
+          <ul class="mt-3 space-y-2 text-sm">
+            {
+              data.includes.map((item) => (
+                <li class="flex items-start gap-2">
+                  <Icon name="check" size={16} class="mt-1 shrink-0 text-accent-600" />
+                  <span class="text-muted">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <Button href="/contacto" class="mt-6" full>Solicitar visita técnica</Button>
+          <p class="mt-3 text-xs text-muted">
+            Última actualización: <time datetime={data.updatedAt.toISOString().slice(0, 10)}>
+              {formatDateEs(data.updatedAt)}
+            </time>
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    {
+      data.faqs.length > 0 && (
+        <Section
+          tone="muted"
+          eyebrow="Preguntas frecuentes"
+          title={`Dudas sobre ${(data.shortTitle ?? data.title).toLowerCase()}`}
+          spacing="md"
+        >
+          <div class="max-w-3xl">
+            <Faq items={data.faqs} openFirst />
+          </div>
+        </Section>
+      )
+    }
+
+    {
+      relacionadosConServicio.length > 0 && (
+        <Section
+          eyebrow="Proyectos"
+          title="Obras que hemos ejecutado en este servicio"
+          spacing="md"
+        >
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {relacionadosConServicio.map(({ proyecto, servicioRef }) => (
+              <li class="flex">
+                <ProjectCard
+                  href={`/proyectos/${proyecto.id}`}
+                  title={proyecto.data.title}
+                  excerpt={proyecto.data.excerpt}
+                  image={proyecto.data.cover}
+                  imageAlt={proyecto.data.coverAlt}
+                  location={proyecto.data.location}
+                  year={proyecto.data.year}
+                  surface={proyecto.data.surface}
+                  duration={proyecto.data.duration}
+                  serviceLabel={servicioRef?.data.shortTitle ?? servicioRef?.data.title}
+                />
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )
+    }
+
+    <Section tone="muted" title="Otros servicios" spacing="sm">
+      <ul class="grid gap-3 sm:grid-cols-3">
+        {
+          otrosServicios.map((otro) => (
+            <li>
+              <a
+                href={`/servicios/${otro.id}`}
+                class="flex min-h-14 items-center justify-between gap-3 rounded-lg border border-brand-200 bg-white px-4 py-3 font-semibold text-brand-800 transition-colors hover:border-brand-300 hover:bg-brand-50"
+              >
+                {otro.data.shortTitle ?? otro.data.title}
+                <Icon name="arrow-right" size={18} class="shrink-0 text-accent-700" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+  </article>
+
+  <CtaBanner
+    title={`¿Quieres presupuesto para tu ${(data.shortTitle ?? data.title).toLowerCase()}?`}
+  />
+</BaseLayout>

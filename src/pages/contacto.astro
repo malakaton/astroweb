@@ -1,0 +1,162 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Section from '@components/Section.astro';
+import ContactForm from '@components/ContactForm.astro';
+import Icon from '@components/Icon.astro';
+import Faq from '@components/Faq.astro';
+import { BUSINESS, mailHref, telHref, whatsappHref } from '@config';
+import { faqPage, type Crumb, type FaqItem } from '@lib/schema';
+
+const crumbs: Crumb[] = [{ name: 'Contacto', href: '/contacto' }];
+
+const faqs: FaqItem[] = [
+  {
+    question: '¿La visita técnica y el presupuesto tienen coste?',
+    answer:
+      'No. La visita técnica y el presupuesto son gratuitos y sin compromiso en Madrid y área metropolitana. Solo cobramos proyecto técnico cuando la obra requiere licencia de obra mayor y decides no adjudicarnos los trabajos.',
+  },
+  {
+    question: '¿Cuánto tardáis en responder?',
+    answer:
+      'Contestamos en menos de 24 horas laborables. La visita técnica se agenda normalmente en 2-4 días y el presupuesto cerrado se entrega en 48-72 horas desde la visita.',
+  },
+  {
+    question: '¿Puedo llamar directamente?',
+    answer: `Sí, atendemos en el ${BUSINESS.phoneHuman} de lunes a jueves de 8:30 a 19:00 y viernes de 8:30 a 15:00. Si estamos en obra, deja un WhatsApp y te devolvemos la llamada el mismo día.`,
+  },
+];
+
+const canales = [
+  {
+    icon: 'phone',
+    label: 'Teléfono',
+    value: BUSINESS.phoneHuman,
+    href: telHref,
+    detail: 'Lun-jue 8:30-19:00 · Vie 8:30-15:00',
+  },
+  {
+    icon: 'chat',
+    label: 'WhatsApp',
+    value: 'Escríbenos con fotos',
+    href: whatsappHref,
+    detail: 'Respuesta el mismo día laborable',
+  },
+  {
+    icon: 'mail',
+    label: 'Email',
+    value: BUSINESS.email,
+    href: mailHref,
+    detail: 'Respondemos en menos de 24 h',
+  },
+] as const;
+
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${BUSINESS.geo.lat},${BUSINESS.geo.lng}`;
+---
+
+<BaseLayout
+  title="Contacto y presupuesto de reformas en Madrid"
+  description="Pide presupuesto de reforma en Madrid: visita técnica gratuita, respuesta en menos de 24 horas y presupuesto cerrado por partidas en 48-72 horas."
+  crumbs={crumbs}
+  image="/og/og-contacto.jpg"
+  imageAlt="Contacto con Reformas Arana en Madrid"
+  pageType="ContactPage"
+  schemaNodes={[faqPage('/contacto', faqs)]}
+>
+  <PageHeader
+    eyebrow="Contacto"
+    title="Pide tu presupuesto de reforma"
+    description="Rellena el formulario con los datos básicos de tu proyecto o llámanos. Concretamos la visita técnica, medimos y te entregamos un presupuesto cerrado por partidas en 48-72 horas."
+  />
+
+  <Section spacing="lg">
+    <div class="grid gap-10 lg:grid-cols-[1.15fr_1fr]">
+      <div>
+        <h2 class="sr-only">Formulario de solicitud de presupuesto</h2>
+        <ContactForm />
+      </div>
+
+      <div class="space-y-6">
+        <section aria-labelledby="canales-title">
+          <h2 id="canales-title" class="text-2xl">Otras formas de contacto</h2>
+          <ul class="mt-4 space-y-3">
+            {
+              canales.map((canal) => (
+                <li>
+                  <a
+                    href={canal.href}
+                    class="flex items-start gap-4 rounded-[var(--radius-card)] border border-brand-100 bg-white p-4 transition-colors hover:border-brand-300 hover:bg-brand-50"
+                    rel={canal.label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
+                    target={canal.label === 'WhatsApp' ? '_blank' : undefined}
+                  >
+                    <span
+                      class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-brand-900 text-white"
+                      aria-hidden="true"
+                    >
+                      <Icon name={canal.icon} size={20} />
+                    </span>
+                    <span>
+                      <span class="block text-sm font-bold text-brand-900">{canal.label}</span>
+                      <span class="block font-semibold text-brand-800">{canal.value}</span>
+                      <span class="block text-sm text-muted">{canal.detail}</span>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section
+          aria-labelledby="oficina-title"
+          class="rounded-[var(--radius-card)] border border-brand-100 bg-brand-50 p-6"
+        >
+          <h2 id="oficina-title" class="text-2xl">Oficina técnica</h2>
+          <address class="mt-3 space-y-1 text-muted not-italic">
+            <p class="font-semibold text-brand-900">{BUSINESS.address.street}</p>
+            <p>{BUSINESS.address.postalCode} {BUSINESS.address.city}</p>
+            <p>{BUSINESS.address.region}</p>
+          </address>
+          <p class="mt-4 text-sm text-muted">
+            Atendemos en oficina con cita previa para revisar planos y muestras de materiales.
+          </p>
+          <a
+            href={mapsUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-brand-900 bg-white px-4 font-semibold text-brand-900 hover:bg-brand-100"
+          >
+            <Icon name="map-pin" size={18} />
+            Ver ubicación en Google Maps
+          </a>
+          <p class="mt-3 text-xs text-muted">
+            Enlazamos al mapa en lugar de incrustarlo: un iframe de Google Maps añade más de 1 MB de
+            descarga y cookies de terceros a la página.
+          </p>
+        </section>
+
+        <section
+          aria-labelledby="zonas-title"
+          class="rounded-[var(--radius-card)] border border-brand-100 bg-white p-6"
+        >
+          <h2 id="zonas-title" class="text-xl">Zonas donde trabajamos</h2>
+          <ul class="mt-3 flex flex-wrap gap-2">
+            {
+              BUSINESS.areaServed.map((zona) => (
+                <li class="rounded-full bg-brand-50 px-3 py-1.5 text-sm font-semibold text-brand-800">
+                  {zona}
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="muted" eyebrow="Antes de escribirnos" title="Preguntas frecuentes" spacing="md">
+    <div class="max-w-3xl">
+      <Faq items={faqs} openFirst />
+    </div>
+  </Section>
+</BaseLayout>

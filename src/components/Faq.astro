@@ -1,0 +1,41 @@
+---
+/**
+ * Faq.astro — acordeón con <details>/<summary>.
+ * Cero JavaScript: apertura nativa, navegable con teclado y con el estado
+ * expandido/contraído anunciado por los lectores de pantalla.
+ * El FAQPage JSON-LD lo emite la página con los mismos datos.
+ */
+import Icon from '@components/Icon.astro';
+import type { FaqItem } from '@lib/schema';
+
+interface Props {
+  items: readonly FaqItem[];
+  /** Abre el primer elemento (útil cuando la FAQ es el contenido principal) */
+  openFirst?: boolean;
+  class?: string;
+}
+
+const { items, openFirst = false, class: className = '' } = Astro.props;
+---
+
+<div class:list={['divide-y divide-brand-100 overflow-hidden rounded-[var(--radius-card)] border border-brand-100 bg-white', className]}>
+  {
+    items.map((item, index) => (
+      <details class="group" open={openFirst && index === 0}>
+        <summary
+          class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-left font-bold text-brand-900 transition-colors hover:bg-brand-50 [&::-webkit-details-marker]:hidden"
+        >
+          <h3 class="text-lg font-bold">{item.question}</h3>
+          <Icon
+            name="chevron-down"
+            size={22}
+            class="shrink-0 text-accent-700 transition-transform duration-300 group-open:rotate-180"
+          />
+        </summary>
+        <div class="px-5 pb-5 text-muted">
+          <p>{item.answer}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>

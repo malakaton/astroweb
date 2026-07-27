@@ -1,0 +1,107 @@
+---
+/**
+ * Hero.astro
+ *
+ * Optimizado para LCP: la imagen se sirve como WebP con srcset, se marca
+ * `loading="eager"` + `fetchpriority="high"` (nunca lazy en el above the fold,
+ * es el error más común que hunde el LCP) y el texto no espera a ninguna
+ * fuente web porque usamos el stack del sistema.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from '@components/Icon.astro';
+import Button from '@components/Button.astro';
+
+interface Props {
+  kicker?: string;
+  title: string;
+  subtitle: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  bullets?: readonly string[];
+  primaryCta?: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  /** h1 en la home y en landings; h2 si la página ya tiene otro h1 */
+  as?: 'h1' | 'h2';
+}
+
+const {
+  kicker,
+  title,
+  subtitle,
+  image,
+  imageAlt,
+  bullets = [],
+  primaryCta = { label: 'Pedir presupuesto gratis', href: '/contacto' },
+  secondaryCta,
+  as: Heading = 'h1',
+}: Props = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-brand-900">
+  <Image
+    src={image}
+    alt={imageAlt}
+    widths={[640, 960, 1280, 1600, 2000]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+    format="webp"
+    quality={72}
+    class="absolute inset-0 -z-10 size-full object-cover"
+  />
+  <!-- Capa de contraste: garantiza ratio AA del texto sobre la fotografía -->
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-950/95 via-brand-950/85 to-brand-900/55"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page py-20 sm:py-24 lg:py-32">
+    <div class="max-w-2xl">
+      {
+        kicker && (
+          <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-accent-300 ring-1 ring-white/20">
+            <Icon name="shield" size={16} />
+            {kicker}
+          </p>
+        )
+      }
+      <Heading class="text-4xl text-white sm:text-5xl lg:text-6xl">{title}</Heading>
+      <p class="mt-5 text-lg text-brand-100 sm:text-xl">{subtitle}</p>
+
+      {
+        bullets.length > 0 && (
+          <ul class="mt-7 grid gap-2.5 sm:grid-cols-2">
+            {bullets.map((bullet) => (
+              <li class="flex items-start gap-2.5 text-brand-50">
+                <Icon name="check" size={20} class="mt-1 shrink-0 text-accent-300" />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <Button href={primaryCta.href} size="lg">
+          {primaryCta.label}
+          <Icon name="arrow-right" size={20} />
+        </Button>
+        {
+          secondaryCta && (
+            <Button
+              href={secondaryCta.href}
+              variant="outline"
+              size="lg"
+              class="border-white/70 bg-transparent text-white hover:bg-white/10 hover:text-white"
+            >
+              {secondaryCta.label}
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

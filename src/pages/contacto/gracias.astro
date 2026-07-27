@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
+import { BUSINESS, telHref } from '@config';
+---
+
+<BaseLayout
+  title="Solicitud recibida"
+  description="Hemos recibido tu solicitud de presupuesto. Te contactamos en menos de 24 horas laborables."
+  noindex={true}
+>
+  <Section spacing="lg">
+    <div class="mx-auto max-w-2xl text-center">
+      <span
+        class="mx-auto flex size-16 items-center justify-center rounded-full bg-brand-50 text-accent-600"
+        aria-hidden="true"
+      >
+        <Icon name="check-circle" size={36} />
+      </span>
+      <h1 class="mt-6 text-4xl">Solicitud recibida</h1>
+      <p class="mt-4 text-lg text-muted">
+        Gracias por contactar con Reformas Arana. Un técnico revisará los datos de tu proyecto y te
+        llamará en menos de 24 horas laborables para concretar la visita.
+      </p>
+
+      <ol class="mt-8 space-y-3 text-left">
+        <li class="flex items-start gap-3 rounded-lg bg-brand-50 p-4">
+          <Icon name="phone" size={20} class="mt-0.5 shrink-0 text-accent-700" />
+          <span><strong class="text-brand-900">Te llamamos</strong> para confirmar detalles y agendar la visita técnica gratuita.</span>
+        </li>
+        <li class="flex items-start gap-3 rounded-lg bg-brand-50 p-4">
+          <Icon name="ruler" size={20} class="mt-0.5 shrink-0 text-accent-700" />
+          <span><strong class="text-brand-900">Medimos en tu casa o local</strong> y revisamos el estado real de instalaciones.</span>
+        </li>
+        <li class="flex items-start gap-3 rounded-lg bg-brand-50 p-4">
+          <Icon name="file-text" size={20} class="mt-0.5 shrink-0 text-accent-700" />
+          <span><strong class="text-brand-900">Recibes el presupuesto cerrado</strong> por partidas en 48-72 horas.</span>
+        </li>
+      </ol>
+
+      <div class="mt-9 flex flex-wrap justify-center gap-3">
+        <Button href="/proyectos" size="lg">
+          Ver proyectos entregados
+          <Icon name="arrow-right" size={20} />
+        </Button>
+        <Button href={telHref} variant="outline" size="lg">
+          <Icon name="phone" size={20} />
+          {BUSINESS.phoneHuman}
+        </Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

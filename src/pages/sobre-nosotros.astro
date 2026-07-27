@@ -1,0 +1,204 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Section from '@components/Section.astro';
+import Stats from '@components/Stats.astro';
+import CtaBanner from '@components/CtaBanner.astro';
+import Icon from '@components/Icon.astro';
+import { Image } from 'astro:assets';
+import equipoImage from '@assets/equipo-reformas-arana.webp';
+import tallerImage from '@assets/taller-materiales.webp';
+import { BUSINESS } from '@config';
+import type { Crumb } from '@lib/schema';
+
+const crumbs: Crumb[] = [{ name: 'Sobre nosotros', href: '/sobre-nosotros' }];
+
+const valores = [
+  {
+    icon: 'file-text',
+    title: 'Transparencia en el presupuesto',
+    text: 'Cada partida con su medición, su material y su precio. Si algo no está incluido, lo decimos antes de firmar, no en la factura final.',
+  },
+  {
+    icon: 'clock',
+    title: 'Respeto por el plazo',
+    text: 'Planificamos con holgura realista y limitamos el número de obras simultáneas para no dejar ninguna parada.',
+  },
+  {
+    icon: 'users',
+    title: 'Equipo estable',
+    text: 'Oficiales con contrato y años en la casa. La calidad de un acabado depende de quién lo ejecuta, no del catálogo.',
+  },
+  {
+    icon: 'shield',
+    title: 'Responsabilidad tras la entrega',
+    text: 'Garantía de 3 años y servicio de posventa con un teléfono directo. Volvemos si algo no está bien.',
+  },
+] as const;
+
+const hitos = [
+  {
+    year: '2004',
+    title: 'Primeros trabajos de albañilería',
+    text: 'Arrancamos con reformas de baño y cocina en el centro de Madrid con un equipo de tres personas.',
+  },
+  {
+    year: '2011',
+    title: 'Equipo de instalaciones propio',
+    text: 'Incorporamos fontaneros y electricistas en plantilla para controlar la parte crítica de cada obra.',
+  },
+  {
+    year: '2017',
+    title: 'Departamento técnico',
+    text: 'Sumamos arquitecto e ingeniero para asumir reformas con licencia de obra mayor y proyectos de local.',
+  },
+  {
+    year: '2024',
+    title: 'Rehabilitación energética',
+    text: 'Especialización en SATE y ayudas de eficiencia energética para comunidades de propietarios.',
+  },
+] as const;
+
+const certificaciones = [
+  'Seguro de responsabilidad civil de 1.000.000 €',
+  'Instaladores eléctricos autorizados con emisión de boletín',
+  'Personal con formación PRL en construcción (20 h)',
+  'Gestión de residuos con planta autorizada de la Comunidad de Madrid',
+];
+---
+
+<BaseLayout
+  title="Sobre nosotros: empresa de reformas en Madrid"
+  description="Somos una empresa de reformas de Madrid con equipo propio desde 2004: 750 obras entregadas, departamento técnico y garantía de 3 años por escrito."
+  crumbs={crumbs}
+  imageAlt="Equipo de Reformas Arana en Madrid"
+  pageType="AboutPage"
+>
+  <PageHeader
+    eyebrow="Sobre nosotros"
+    title="Una empresa de reformas con obra propia, no una intermediaria"
+    description="Desde 2004 reformamos viviendas y locales en Madrid con equipo en plantilla, departamento técnico y un compromiso simple: el presupuesto y la fecha que firmamos son los que se cumplen."
+  />
+
+  <Section spacing="lg">
+    <div class="grid items-center gap-10 lg:grid-cols-2">
+      <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
+        <Image
+          src={equipoImage}
+          alt="Equipo de obra de Reformas Arana revisando planos en una vivienda de Madrid"
+          widths={[560, 800, 1200]}
+          sizes="(min-width: 1024px) 560px, 92vw"
+          loading="eager"
+          decoding="sync"
+          format="webp"
+          quality={76}
+          class="aspect-3/2 size-full object-cover"
+        />
+      </div>
+      <div>
+        <h2 class="text-3xl sm:text-4xl">Por qué existimos</h2>
+        <div class="rich-text mt-5">
+          <p>
+            Reformas Arana nace en 2004 después de años trabajando como oficiales para terceros y
+            ver siempre el mismo patrón: presupuestos incompletos para ganar la obra, plazos que se
+            duplican y clientes sin nadie a quien reclamar.
+          </p>
+          <p>
+            Montamos la empresa con la idea contraria. Medimos antes de presupuestar, incluimos las
+            partidas incómodas (retirada de escombros, remates, limpieza final) y asignamos un jefe
+            de obra que responde de principio a fin. Es más lento de vender y mucho más fácil de
+            cumplir.
+          </p>
+          <p>
+            Hoy somos {BUSINESS.stats.projectsDelivered}+ obras entregadas, un departamento técnico
+            propio y un equipo estable de {BUSINESS.stats.yearsOfExperience} años de oficio en
+            Madrid.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Stats tone="brand" />
+
+  <Section
+    tone="muted"
+    eyebrow="Cómo trabajamos"
+    title="Cuatro principios que no negociamos"
+  >
+    <ul class="grid gap-6 sm:grid-cols-2">
+      {
+        valores.map((valor) => (
+          <li class="rounded-[var(--radius-card)] border border-brand-100 bg-white p-6 shadow-[var(--shadow-card)]">
+            <span
+              class="flex size-12 items-center justify-center rounded-lg bg-brand-900 text-white"
+              aria-hidden="true"
+            >
+              <Icon name={valor.icon} size={24} />
+            </span>
+            <h3 class="mt-4 text-lg">{valor.title}</h3>
+            <p class="mt-2 text-[0.975rem] text-muted">{valor.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section eyebrow="Trayectoria" title="20 años de obra en Madrid">
+    <ol class="relative space-y-8 border-l-2 border-brand-100 pl-6">
+      {
+        hitos.map((hito) => (
+          <li class="relative">
+            <span
+              class="absolute top-1.5 -left-[1.9rem] size-3.5 rounded-full bg-accent-600 ring-4 ring-white"
+              aria-hidden="true"
+            />
+            <p class="text-sm font-bold tracking-[0.14em] text-accent-700 uppercase">{hito.year}</p>
+            <h3 class="mt-1 text-xl">{hito.title}</h3>
+            <p class="mt-1.5 text-muted">{hito.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section tone="muted" spacing="md">
+    <div class="grid items-center gap-10 lg:grid-cols-2">
+      <div>
+        <h2 class="text-3xl">Seguridad, seguros y cumplimiento</h2>
+        <p class="mt-4 text-muted">
+          Una reforma mal asegurada es un riesgo para el cliente y para la comunidad de vecinos.
+          Trabajamos con toda la cobertura documentada y la entregamos antes de empezar la obra.
+        </p>
+        <ul class="mt-6 space-y-2.5">
+          {
+            certificaciones.map((cert) => (
+              <li class="flex items-start gap-2.5">
+                <Icon name="check-circle" size={20} class="mt-0.5 shrink-0 text-accent-600" />
+                <span class="text-brand-900">{cert}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
+        <Image
+          src={tallerImage}
+          alt="Materiales de obra clasificados en el almacén de Reformas Arana"
+          widths={[560, 800, 1100]}
+          sizes="(min-width: 1024px) 560px, 92vw"
+          loading="lazy"
+          decoding="async"
+          format="webp"
+          quality={74}
+          class="aspect-4/3 size-full object-cover"
+        />
+      </div>
+    </div>
+  </Section>
+
+  <CtaBanner
+    title="Conócenos en la visita técnica"
+    description="Es gratuita, dura unos 45 minutos y saldrás con criterio suficiente para comparar cualquier presupuesto."
+  />
+</BaseLayout>
