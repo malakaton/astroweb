@@ -105,7 +105,7 @@ function mapProyecto(row: Record<string, unknown>): Record<string, unknown> {
 export function supabaseLoader(table: 'servicios' | 'proyectos'): Loader {
   return {
     name: `supabase-${table}`,
-    load: async ({ store, parseData, generateDigest }) => {
+    load: async ({ store, parseData, generateDigest, renderMarkdown }) => {
       const rows = await fetchRows(table);
       store.clear();
 
@@ -116,12 +116,18 @@ export function supabaseLoader(table: 'servicios' | 'proyectos'): Loader {
         const mapped = mapper(row);
         const data = await parseData({ id: slug, data: mapped });
         const digest = generateDigest(data);
+        const bodyMd = row.body_md as string | undefined;
+
         store.set({
           id: slug,
           data,
           digest,
-          // Si hay contenido Markdown en body_md, se renderiza con <Content />
-          ...(row.body_md ? { body: row.body_md as string } : {}),
+          // Raw body para quien quiera leer el Markdown fuente.
+          ...(bodyMd ? { body: bodyMd } : {}),
+          // Necesario para que `render()`/`<Content />` funcionen: sin
+          // `rendered.html`, el componente no imprime nada aunque `body`
+          // contenga el Markdown en crudo.
+          ...(bodyMd ? { rendered: await renderMarkdown(bodyMd) } : {}),
         });
       }
     },
