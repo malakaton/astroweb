@@ -27,7 +27,7 @@ updatedAt: 2025-11-18
 
 ## Punto de partida
 
-Baño de 8 m² con bañera de 1,7 m infrautilizada, un solo lavabo y alicatado
+Baño de 91 m² con bañera de 1,7 m infrautilizada, un solo lavabo y alicatado
 original de 1998. El desagüe de la bañera presentaba humedades en el techo del
 piso inferior.
 

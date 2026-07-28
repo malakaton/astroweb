@@ -105,30 +105,48 @@ function mapProyecto(row: Record<string, unknown>): Record<string, unknown> {
 export function supabaseLoader(table: 'servicios' | 'proyectos'): Loader {
   return {
     name: `supabase-${table}`,
-    load: async ({ store, parseData, generateDigest, renderMarkdown }) => {
-      const rows = await fetchRows(table);
-      store.clear();
-
+    load: async ({ store, parseData, generateDigest, renderMarkdown, logger }) => {
       const mapper = table === 'servicios' ? mapServicio : mapProyecto;
 
-      for (const row of rows) {
-        const slug = row.slug as string;
-        const mapped = mapper(row);
-        const data = await parseData({ id: slug, data: mapped });
-        const digest = generateDigest(data);
-        const bodyMd = row.body_md as string | undefined;
+      const sync = async () => {
+        const rows = await fetchRows(table);
+        store.clear();
 
-        store.set({
-          id: slug,
-          data,
-          digest,
-          // Raw body para quien quiera leer el Markdown fuente.
-          ...(bodyMd ? { body: bodyMd } : {}),
-          // Necesario para que `render()`/`<Content />` funcionen: sin
-          // `rendered.html`, el componente no imprime nada aunque `body`
-          // contenga el Markdown en crudo.
-          ...(bodyMd ? { rendered: await renderMarkdown(bodyMd) } : {}),
-        });
+        for (const row of rows) {
+          const slug = row.slug as string;
+          const mapped = mapper(row);
+          const data = await parseData({ id: slug, data: mapped });
+          const digest = generateDigest(data);
+          const bodyMd = row.body_md as string | undefined;
+
+          store.set({
+            id: slug,
+            data,
+            digest,
+            // Raw body para quien quiera leer el Markdown fuente.
+            ...(bodyMd ? { body: bodyMd } : {}),
+            // Necesario para que `render()`/`<Content />` funcionen: sin
+            // `rendered.html`, el componente no imprime nada aunque `body`
+            // contenga el Markdown en crudo.
+            ...(bodyMd ? { rendered: await renderMarkdown(bodyMd) } : {}),
+          });
+        }
+      };
+
+      await sync();
+
+      // En `astro dev` no hay recarga automática al cambiar filas en Supabase
+      // (a diferencia del loader `glob`, que usa un watcher de sistema de
+      // archivos). Se sondea la tabla cada pocos segundos para que los
+      // cambios hechos desde el panel de administración se vean sin tener
+      // que reiniciar el servidor de desarrollo. En build de producción esto
+      // no se activa: `load()` se ejecuta una única vez.
+      if (import.meta.env.DEV) {
+        setInterval(() => {
+          sync().catch((error) => {
+            logger.error(`Error al resincronizar "${table}" desde Supabase: ${error}`);
+          });
+        }, 5000);
       }
     },
   };
