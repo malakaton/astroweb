@@ -18,6 +18,22 @@ interface Props {
   subtitle: string;
   image: ImageMetadata;
   imageAlt: string;
+  /** Calidad WebP. Súbela si la imagen tiene detalle fino o degradados largos */
+  imageQuality?: number;
+  /**
+   * Lema de marca rasterizado, colocado a la derecha del titular.
+   *
+   * Va como <img> propio y no incrustado en `image` porque el fondo se recorta
+   * con `object-cover` y el recorte cambia con cada viewport: el texto acabaría
+   * cortado o pisando el titular. Así el tamaño es determinista, la imagen
+   * queda por encima del degradado de contraste (no debajo, que es lo que
+   * apagaba el texto) y se puede ocultar donde no hay sitio.
+   *
+   * Solo se muestra a partir de 1280 px: por debajo, el titular ocupa el ancho
+   * disponible. El texto del lema debe repetirse en `claimAlt` (WCAG 1.1.1).
+   */
+  claimImage?: ImageMetadata;
+  claimAlt?: string;
   bullets?: readonly string[];
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
@@ -31,24 +47,40 @@ const {
   subtitle,
   image,
   imageAlt,
+  imageQuality = 72,
+  claimImage,
+  claimAlt = '',
   bullets = [],
   primaryCta = { label: 'Pedir presupuesto gratis', href: '/contacto' },
   secondaryCta,
   as: Heading = 'h1',
 }: Props = Astro.props;
+
+/**
+ * Nunca pedimos anchos mayores que el original: escalar hacia arriba solo añade
+ * peso y difumina la imagen. Añadimos el ancho real si el original se queda por
+ * debajo del último tramo, para no perder nitidez en pantallas retina.
+ */
+const candidateWidths = [640, 960, 1280, 1600, 2000].filter((w) => w <= image.width);
+const imageWidths =
+  candidateWidths.length === 0
+    ? [image.width]
+    : candidateWidths.at(-1)! < image.width && image.width < 2000
+      ? [...candidateWidths, image.width]
+      : candidateWidths;
 ---
 
 <section class="relative isolate overflow-hidden bg-brand-900">
   <Image
     src={image}
     alt={imageAlt}
-    widths={[640, 960, 1280, 1600, 2000]}
+    widths={imageWidths}
     sizes="100vw"
     loading="eager"
     fetchpriority="high"
     decoding="sync"
     format="webp"
-    quality={72}
+    quality={imageQuality}
     class="absolute inset-0 -z-10 size-full object-cover"
   />
   <!-- Capa de contraste: garantiza ratio AA del texto sobre la fotografía -->
@@ -93,9 +125,8 @@ const {
           secondaryCta && (
             <Button
               href={secondaryCta.href}
-              variant="outline"
+              variant="outline-inverse"
               size="lg"
-              class="border-white/70 bg-transparent text-white hover:bg-white/10 hover:text-white"
             >
               {secondaryCta.label}
             </Button>
@@ -104,4 +135,20 @@ const {
       </div>
     </div>
   </div>
+  {
+    claimImage && (
+      <Image
+        src={claimImage}
+        alt={claimAlt}
+        width={500}
+        height={260}
+        densities={[2]}
+        loading="eager"
+        fetchpriority="low"
+        format="webp"
+        quality={85}
+        class="pointer-events-none mx-auto -mt-4 mb-10 w-64 sm:w-72 xl:absolute xl:top-1/2 xl:right-10 xl:mb-0 xl:w-[30rem] xl:-translate-y-1/2 2xl:right-20"
+      />
+    )
+  }
 </section>

@@ -12,7 +12,7 @@ interface Props {
 
 const {
   title = '¿Hablamos de tu reforma?',
-  description = 'Visita técnica gratuita en Madrid y presupuesto cerrado por partidas en 48-72 horas. Sin compromiso y sin letra pequeña.',
+  description = 'Visita técnica gratuita en Sabadell y presupuesto cerrado por partidas en 48-72 horas. Sin compromiso y sin letra pequeña.',
   ctaLabel = 'Pedir presupuesto gratis',
   ctaHref = '/contacto',
 } = Astro.props;
@@ -32,9 +32,8 @@ const {
         </Button>
         <Button
           href={telHref}
-          variant="outline"
+          variant="outline-inverse"
           size="lg"
-          class="border-white/70 bg-transparent text-white hover:bg-white/10 hover:text-white"
         >
           <Icon name="phone" size={20} />
           {BUSINESS.phoneHuman}

@@ -1,8 +1,8 @@
 ---
 title: Instalaciones, climatización y aerotermia
 shortTitle: Instalaciones
-seoTitle: Instalaciones y climatización en Madrid
-description: Renovación de electricidad, fontanería, aerotermia y aire acondicionado por conductos en Madrid. Boletines y certificados oficiales incluidos.
+seoTitle: Instalaciones y climatización en Sabadell
+description: Renovación de electricidad, fontanería, aerotermia y aire acondicionado por conductos en Sabadell. Boletines y certificados oficiales incluidos.
 excerpt: Electricidad certificada, fontanería nueva, aerotermia y climatización por conductos con cálculo de cargas, boletín oficial y puesta en marcha.
 cover: ../../assets/servicios/instalaciones-y-climatizacion.webp
 coverAlt: Instalación de conductos de climatización en el falso techo de una vivienda

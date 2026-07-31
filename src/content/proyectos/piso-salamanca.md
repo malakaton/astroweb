@@ -5,7 +5,7 @@ excerpt: Rehabilitación de una vivienda señorial conservando molduras, suelos 
 cover: ../../assets/proyectos/piso-salamanca.webp
 coverAlt: Salón señorial reformado con molduras restauradas en el Barrio de Salamanca
 servicio: reforma-integral
-location: Barrio de Salamanca, Madrid
+location: Barrio de Salamanca, Sabadell
 year: 2024
 surface: 140
 duration: 14 semanas

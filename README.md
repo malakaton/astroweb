@@ -1,4 +1,4 @@
-# Reformas Arana — web corporativa
+# Grupo S Valles — web corporativa
 
 Web corporativa para empresa de reformas construida con **Astro 5 + TypeScript + Tailwind CSS 4**.
 Salida estática, **0 KB de JavaScript en el cliente**, SEO técnico completo y lista para desplegar en
@@ -38,6 +38,7 @@ npm run check          # astro check: tipos en .astro, .ts y contenido
 npm test               # tests de la validación del formulario (runner de Node)
 npm run audit:seo      # auditoría SEO/accesibilidad del HTML generado
 npm run images:generate # regenera los assets placeholder (WebP/JPEG/PNG)
+npm run images:hero    # regenera el fondo del hero y el lema rasterizado
 ```
 
 Auditoría con Lighthouse en local (requiere Chrome):

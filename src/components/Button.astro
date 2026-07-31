@@ -6,7 +6,7 @@
  */
 import type { HTMLAttributes } from 'astro/types';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'outline' | 'outline-inverse' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 interface Props extends Omit<HTMLAttributes<'a'>, 'type'> {
@@ -37,6 +37,13 @@ const variants: Record<Variant, string> = {
   secondary: 'bg-brand-900 text-white hover:bg-brand-800 active:bg-brand-950',
   outline:
     'border-2 border-brand-900 text-brand-900 bg-white hover:bg-brand-50 active:bg-brand-100',
+  // Variante para fondos oscuros (hero, banner CTA). Existe como variante y no
+  // como clases pasadas por `class` porque en Tailwind gana la regla que va
+  // después en el CSS generado, no la que va después en el atributo class:
+  // `bg-white` del outline se imponía a un `bg-transparent` de override y el
+  // botón quedaba blanco con texto blanco (invisible hasta el hover).
+  'outline-inverse':
+    'border-2 border-white/70 text-white bg-transparent hover:bg-white/15 active:bg-white/25',
   ghost: 'text-brand-800 hover:bg-brand-50 hover:text-brand-900',
 };
 

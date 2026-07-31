@@ -14,13 +14,13 @@ export interface OpeningHour {
 export const SITE = {
   /** Dominio canónico, sin barra final. Debe coincidir con `site` de astro.config.mjs */
   url: 'https://www.reformasarana.es',
-  name: 'Reformas Arana',
-  legalName: 'Reformas Arana S.L.',
-  /** Se concatena como «Título | Reformas Arana» */
-  titleTemplate: '%s | Reformas Arana',
-  defaultTitle: 'Reformas Arana | Reformas integrales en Madrid con garantía',
+  name: 'Grupo S Valles',
+  legalName: 'Grupo S Valles S.L.',
+  /** Se concatena como «Título | Grupo S Valles» */
+  titleTemplate: '%s | Grupo S Valles',
+  defaultTitle: 'Grupo S Valles | Reformas integrales en Sabadell con garantía',
   defaultDescription:
-    'Empresa de reformas integrales en Madrid con más de 20 años de experiencia. Presupuesto cerrado sin sorpresas, plazos garantizados y 3 años de garantía. Pide presupuesto gratis.',
+    'Empresa de reformas integrales en Sabadell con más de 20 años de experiencia. Presupuesto cerrado sin sorpresas, plazos garantizados y 3 años de garantía. Pide presupuesto gratis.',
   lang: 'es',
   locale: 'es_ES',
   themeColor: '#0f2a3f',
@@ -41,17 +41,17 @@ export const BUSINESS = {
   whatsapp: '+34600123456',
   address: {
     street: 'Calle de Alcalá 128, 2º B',
-    city: 'Madrid',
-    region: 'Comunidad de Madrid',
+    city: 'Sabadell',
+    region: 'Comunidad de Sabadell',
     postalCode: '28009',
     country: 'ES',
   },
   geo: { lat: 40.4237, lng: -3.6712 },
   /** Áreas de servicio: refuerza el SEO local */
   areaServed: [
-    'Madrid',
+    'Sabadell',
     'Alcobendas',
-    'Las Rozas de Madrid',
+    'Las Rozas de Sabadell',
     'Pozuelo de Alarcón',
     'Getafe',
     'Alcalá de Henares',

@@ -5,7 +5,7 @@ excerpt: Vivienda de 1962 sin reformar. Se abrió la cocina al salón, se redist
 cover: ../../assets/proyectos/atico-chamberi.webp
 coverAlt: Salón de ático reformado en Chamberí con acceso a terraza
 servicio: reforma-integral
-location: Chamberí, Madrid
+location: Chamberí, Sabadell
 year: 2025
 surface: 96
 duration: 10 semanas

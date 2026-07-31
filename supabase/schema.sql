@@ -1,5 +1,5 @@
 -- ============================================================================
--- Reformas Arana — esquema de Supabase
+-- Grupo S Valles — esquema de Supabase
 -- Ejecutar en Supabase Studio → SQL Editor (o con `supabase db push`).
 --
 -- Diseño: la web pública NO habla con Supabase desde el navegador. Solo la

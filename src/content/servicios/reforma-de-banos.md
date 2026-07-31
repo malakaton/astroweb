@@ -1,8 +1,8 @@
 ---
-title: Reforma de baños en Madrid
+title: Reforma de baños en Sabadell
 shortTitle: Baños
-seoTitle: Reforma de baños en Madrid en 2 semanas
-description: 'Reforma de baños en Madrid en 10-15 días: cambio de bañera por plato de ducha, impermeabilización certificada y saneamiento nuevo. Presupuesto cerrado.'
+seoTitle: Reforma de baños en Sabadell en 2 semanas
+description: 'Reforma de baños en Sabadell en 10-15 días: cambio de bañera por plato de ducha, impermeabilización certificada y saneamiento nuevo. Presupuesto cerrado.'
 excerpt: Baños funcionales y estancos ejecutados en 10-15 días. Cambio de bañera por ducha, impermeabilización garantizada y ventilación forzada silenciosa.
 cover: ../../assets/servicios/reforma-de-banos.webp
 coverAlt: Baño reformado con plato de ducha de obra y mampara de cristal
@@ -24,7 +24,7 @@ includes:
   - Alicatado, solado y sellados sanitarios
   - Montaje de sanitarios, grifería, mampara y mobiliario
 faqs:
-  - question: ¿Cuánto cuesta reformar un baño en Madrid?
+  - question: ¿Cuánto cuesta reformar un baño en Sabadell?
     answer: Un baño completo de 4-5 m² con plato de ducha, mueble, sanitarios de marca e impermeabilización parte de 4.600 €. Con acabados de gama alta, ducha a ras de suelo y suelo radiante el rango sube a 6.500-9.000 €.
   - question: ¿Cuánto se tarda en reformar un baño?
     answer: Entre 10 y 15 días laborables. La impermeabilización y los sellados necesitan tiempos de curado que no se pueden acelerar sin arriesgar filtraciones al vecino, así que no comprimimos ese plazo.

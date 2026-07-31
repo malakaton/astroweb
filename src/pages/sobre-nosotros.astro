@@ -40,7 +40,7 @@ const hitos = [
   {
     year: '2004',
     title: 'Primeros trabajos de albañilería',
-    text: 'Arrancamos con reformas de baño y cocina en el centro de Madrid con un equipo de tres personas.',
+    text: 'Arrancamos con reformas de baño y cocina en el centro de Sabadell con un equipo de tres personas.',
   },
   {
     year: '2011',
@@ -63,21 +63,21 @@ const certificaciones = [
   'Seguro de responsabilidad civil de 1.000.000 €',
   'Instaladores eléctricos autorizados con emisión de boletín',
   'Personal con formación PRL en construcción (20 h)',
-  'Gestión de residuos con planta autorizada de la Comunidad de Madrid',
+  'Gestión de residuos con planta autorizada de la Comunidad de Sabadell',
 ];
 ---
 
 <BaseLayout
-  title="Sobre nosotros: empresa de reformas en Madrid"
-  description="Somos una empresa de reformas de Madrid con equipo propio desde 2004: 750 obras entregadas, departamento técnico y garantía de 3 años por escrito."
+  title="Sobre nosotros: empresa de reformas en Sabadell"
+  description="Somos una empresa de reformas de Sabadell con equipo propio desde 2004: 750 obras entregadas, departamento técnico y garantía de 3 años por escrito."
   crumbs={crumbs}
-  imageAlt="Equipo de Reformas Arana en Madrid"
+  imageAlt="Equipo de Grupo S Valles en Sabadell"
   pageType="AboutPage"
 >
   <PageHeader
     eyebrow="Sobre nosotros"
     title="Una empresa de reformas con obra propia, no una intermediaria"
-    description="Desde 2004 reformamos viviendas y locales en Madrid con equipo en plantilla, departamento técnico y un compromiso simple: el presupuesto y la fecha que firmamos son los que se cumplen."
+    description="Desde 2004 reformamos viviendas y locales en Sabadell con equipo en plantilla, departamento técnico y un compromiso simple: el presupuesto y la fecha que firmamos son los que se cumplen."
   />
 
   <Section spacing="lg">
@@ -85,7 +85,7 @@ const certificaciones = [
       <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
         <Image
           src={equipoImage}
-          alt="Equipo de obra de Reformas Arana revisando planos en una vivienda de Madrid"
+          alt="Equipo de obra de Grupo S Valles revisando planos en una vivienda de Sabadell"
           widths={[560, 800, 1200]}
           sizes="(min-width: 1024px) 560px, 92vw"
           loading="eager"
@@ -99,7 +99,7 @@ const certificaciones = [
         <h2 class="text-3xl sm:text-4xl">Por qué existimos</h2>
         <div class="rich-text mt-5">
           <p>
-            Reformas Arana nace en 2004 después de años trabajando como oficiales para terceros y
+            Grupo S Valles nace en 2004 después de años trabajando como oficiales para terceros y
             ver siempre el mismo patrón: presupuestos incompletos para ganar la obra, plazos que se
             duplican y clientes sin nadie a quien reclamar.
           </p>
@@ -112,7 +112,7 @@ const certificaciones = [
           <p>
             Hoy somos {BUSINESS.stats.projectsDelivered}+ obras entregadas, un departamento técnico
             propio y un equipo estable de {BUSINESS.stats.yearsOfExperience} años de oficio en
-            Madrid.
+            Sabadell.
           </p>
         </div>
       </div>
@@ -144,7 +144,7 @@ const certificaciones = [
     </ul>
   </Section>
 
-  <Section eyebrow="Trayectoria" title="20 años de obra en Madrid">
+  <Section eyebrow="Trayectoria" title="20 años de obra en Sabadell">
     <ol class="relative space-y-8 border-l-2 border-brand-100 pl-6">
       {
         hitos.map((hito) => (
@@ -184,7 +184,7 @@ const certificaciones = [
       <div class="overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
         <Image
           src={tallerImage}
-          alt="Materiales de obra clasificados en el almacén de Reformas Arana"
+          alt="Materiales de obra clasificados en el almacén de Grupo S Valles"
           widths={[560, 800, 1100]}
           sizes="(min-width: 1024px) 560px, 92vw"
           loading="lazy"

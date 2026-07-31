@@ -28,14 +28,14 @@ function buildForm(overrides: Record<string, string> = {}): FormData {
 }
 
 test('acepta un envío correcto y normaliza los datos', () => {
-  const form = buildForm({ email: '  ANA@Ejemplo.com ', localidad: 'Madrid', superficie: '90' });
+  const form = buildForm({ email: '  ANA@Ejemplo.com ', localidad: 'Sabadell', superficie: '90' });
   const result = validateContact(form);
   assert.equal(result.ok, true);
   if (!result.ok) return;
   assert.equal(result.data.email, 'ana@ejemplo.com');
   assert.equal(result.data.nombre, 'Ana García');
   assert.equal(result.data.superficie, 90);
-  assert.equal(result.data.localidad, 'Madrid');
+  assert.equal(result.data.localidad, 'Sabadell');
   assert.equal(result.data.presupuesto, null);
 });
 

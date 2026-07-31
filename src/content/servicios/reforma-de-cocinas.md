@@ -1,11 +1,11 @@
 ---
-title: Reforma de cocinas en Madrid
+title: Reforma de cocinas en Sabadell
 shortTitle: Cocinas
-seoTitle: Reforma de cocinas en Madrid
+seoTitle: Reforma de cocinas en Sabadell
 description: Reformamos tu cocina en 3-4 semanas con diseño 3D, mobiliario a medida e instalaciones nuevas. Presupuesto cerrado, montaje propio y garantía de 3 años.
 excerpt: Diseño 3D antes de empezar, mobiliario a medida, encimeras técnicas e instalaciones renovadas. Cocinas abiertas o cerradas ejecutadas en 3-4 semanas.
 cover: ../../assets/servicios/reforma-de-cocinas.webp
-coverAlt: Cocina reformada con isla central y muebles a medida en Madrid
+coverAlt: Cocina reformada con isla central y muebles a medida en Sabadell
 icon: kitchen
 order: 2
 priceFrom: 7900
@@ -24,7 +24,7 @@ includes:
   - Alicatado o revestimiento continuo y frente de cocina
   - Montaje de muebles, encimera, fregadero y grifería
 faqs:
-  - question: ¿Cuánto cuesta reformar una cocina en Madrid?
+  - question: ¿Cuánto cuesta reformar una cocina en Sabadell?
     answer: Una reforma de cocina completa con mobiliario, encimera técnica, instalaciones nuevas y alicatado parte de 7.900 € para unos 8 m². El rango más habitual está entre 9.500 € y 16.000 € según encimera, herrajes y electrodomésticos.
   - question: ¿Cuánto tiempo estaré sin cocina?
     answer: El plazo medio es de 3 a 4 semanas. Las dos primeras corresponden a demolición e instalaciones, y las siguientes al alicatado y montaje de mobiliario. Dejamos siempre operativos el frigorífico y un punto de agua provisional.

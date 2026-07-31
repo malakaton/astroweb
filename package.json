@@ -15,6 +15,7 @@
     "check": "astro check",
     "sync": "astro sync",
     "images:generate": "node scripts/generate-images.mjs",
+    "images:hero": "node scripts/generate-hero.mjs",
     "postinstall": "astro sync",
     "audit:seo": "node scripts/audit-seo.mjs",
     "test": "node --experimental-strip-types --test 'tests/**/*.test.ts'"

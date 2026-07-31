@@ -1,8 +1,8 @@
 ---
 title: Reforma de locales comerciales y oficinas
 shortTitle: Locales y oficinas
-seoTitle: Reforma de locales comerciales en Madrid
-description: Reforma de locales, oficinas y clínicas en Madrid con proyecto técnico, licencia de actividad y obra nocturna para no cerrar tu negocio. Plazos firmados.
+seoTitle: Reforma de locales comerciales en Sabadell
+description: Reforma de locales, oficinas y clínicas en Sabadell con proyecto técnico, licencia de actividad y obra nocturna para no cerrar tu negocio. Plazos firmados.
 excerpt: Adecuación de locales y oficinas con proyecto técnico, licencia de actividad y ejecución por fases o en horario nocturno para minimizar el cierre.
 cover: ../../assets/servicios/reforma-de-locales-comerciales.webp
 coverAlt: Local comercial reformado con iluminación técnica y mobiliario de diseño

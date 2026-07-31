@@ -44,7 +44,11 @@ async function walk(dir) {
 
 const attr = (tag, name) => {
   const match = tag.match(new RegExp(`${name}="([^"]*)"`, 'i'));
-  return match ? match[1] : null;
+  if (match) return match[1];
+  // Sintaxis de atributo vacío del HTML5: `<img alt>` equivale a `alt=""` y es
+  // lo que emite el compilador de Astro para las imágenes decorativas.
+  const bare = tag.match(new RegExp(`\\s${name}(?=[\\s>/])`, 'i'));
+  return bare ? '' : null;
 };
 
 const meta = (html, name, prop = 'name') => {

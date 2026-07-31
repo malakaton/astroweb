@@ -5,7 +5,7 @@ excerpt: Cocina cerrada convertida en espacio abierto con isla de trabajo, colum
 cover: ../../assets/proyectos/cocina-abierta-retiro.webp
 coverAlt: Cocina abierta con isla central y encimera de porcelánico en Retiro
 servicio: reforma-de-cocinas
-location: Retiro, Madrid
+location: Retiro, Sabadell
 year: 2025
 surface: 14
 duration: 4 semanas

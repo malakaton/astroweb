@@ -148,9 +148,9 @@ const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"
 </svg>`;
 
 const MANIFEST = {
-  name: 'Reformas Arana',
-  short_name: 'Reformas Arana',
-  description: 'Reformas integrales en Madrid con presupuesto cerrado y garantía.',
+  name: 'Grupo S Valles',
+  short_name: 'Grupo S Valles',
+  description: 'Reformas integrales en Sabadell con presupuesto cerrado y garantía.',
   start_url: '/',
   display: 'browser',
   background_color: '#ffffff',

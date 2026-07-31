@@ -87,7 +87,10 @@ const robots = noindex
   )
 }
 
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<!-- El PNG va primero como fallback: los navegadores eligen el último formato
+     que soportan, así que Chrome/Firefox/Edge usan el WebP y Safari el PNG. -->
+<link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/favicon.webp" sizes="32x32" type="image/webp" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />

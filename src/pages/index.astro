@@ -12,7 +12,8 @@ import Faq from '@components/Faq.astro';
 import CtaBanner from '@components/CtaBanner.astro';
 import Icon from '@components/Icon.astro';
 import Button from '@components/Button.astro';
-import heroImage from '@assets/hero-reformas.webp';
+import heroImage from '@assets/hero-tu-sueno.webp';
+import claimImage from '@assets/claim-tu-sueno.webp';
 import { BUSINESS } from '@config';
 import { faqPage, type FaqItem } from '@lib/schema';
 import { getCollection, getEntry } from 'astro:content';
@@ -109,7 +110,7 @@ const pasos = [
 
 const faqs: FaqItem[] = [
   {
-    question: '¿Cuánto cuesta una reforma integral en Madrid en 2026?',
+    question: '¿Cuánto cuesta una reforma integral en Sabadell en 2026?',
     answer:
       'Una reforma integral de calidad media-alta parte de 480 €/m². Para una vivienda de 90 m² el rango habitual es de 43.000 € a 68.000 €, incluyendo instalaciones nuevas, albañilería, carpintería, sanitarios y acabados. El precio final depende del estado de partida y del nivel de materiales.',
   },
@@ -129,8 +130,8 @@ const faqs: FaqItem[] = [
       'Entre 8 y 12 semanas en viviendas de 70 a 120 m² sin cambios estructurales. Un baño se resuelve en 10-15 días y una cocina en 3-4 semanas. La fecha comprometida figura en el contrato.',
   },
   {
-    question: '¿En qué zonas de Madrid trabajáis?',
-    answer: `Trabajamos en Madrid capital y en el área metropolitana: ${BUSINESS.areaServed.join(', ')}. Para obras fuera de estas zonas consúltanos y valoramos la viabilidad del desplazamiento.`,
+    question: '¿En qué zonas de Sabadell trabajáis?',
+    answer: `Trabajamos en Sabadell capital y en el área metropolitana: ${BUSINESS.areaServed.join(', ')}. Para obras fuera de estas zonas consúltanos y valoramos la viabilidad del desplazamiento.`,
   },
   {
     question: '¿Puedo ver obras terminadas antes de decidir?',
@@ -139,24 +140,27 @@ const faqs: FaqItem[] = [
   },
 ];
 
-const title = 'Reformas integrales en Madrid | Reformas Arana';
+const title = 'Reformas integrales en Sabadell | Grupo S Valles';
 const description =
-  'Empresa de reformas integrales en Madrid con 20 años de experiencia: presupuesto cerrado, plazos firmados y 3 años de garantía. Visita técnica gratuita.';
+  'Empresa de reformas integrales en Sabadell con 20 años de experiencia: presupuesto cerrado, plazos firmados y 3 años de garantía. Visita técnica gratuita.';
 ---
 
 <BaseLayout
   title={title}
   description={description}
   image="/og/og-default.jpg"
-  imageAlt="Reformas Arana, empresa de reformas integrales en Madrid"
+  imageAlt="Grupo S Valles, empresa de reformas integrales en Sabadell"
   schemaNodes={[faqPage('/', faqs)]}
 >
   <Hero
     kicker={`${BUSINESS.stats.warrantyYears} años de garantía por escrito`}
-    title="Reformas integrales en Madrid, con presupuesto cerrado y plazos que se cumplen"
-    subtitle="Llevamos más de 20 años reformando viviendas y locales en Madrid con equipo propio, un único jefe de obra y un presupuesto que no cambia a mitad de camino."
+    title="Reformas integrales en Sabadell, con presupuesto cerrado y plazos que se cumplen"
+    subtitle="Llevamos más de 20 años reformando viviendas y locales en Sabadell con equipo propio, un único jefe de obra y un presupuesto que no cambia a mitad de camino."
     image={heroImage}
-    imageAlt="Salón de vivienda reformada por Reformas Arana en Madrid"
+    imageAlt=""
+    imageQuality={88}
+    claimImage={claimImage}
+    claimAlt="Tu sueño, nuestro proyecto"
     bullets={[
       'Visita técnica y presupuesto gratuitos',
       'Presupuesto cerrado por partidas',
@@ -198,7 +202,7 @@ const description =
 
   <Section
     tone="muted"
-    eyebrow="Por qué Reformas Arana"
+    eyebrow="Por qué Grupo S Valles"
     title="Lo que nos diferencia de un presupuesto barato"
     description="En una reforma el problema nunca es el precio inicial: son los sobrecostes, los retrasos y la falta de un responsable. Así lo resolvemos."
   >
@@ -231,7 +235,7 @@ const description =
   <Section
     tone="muted"
     eyebrow="Proyectos"
-    title="Obras terminadas en Madrid"
+    title="Obras terminadas en Sabadell"
     description="Casos reales con superficie, plazo y presupuesto orientativo para que puedas comparar con tu propio proyecto."
   >
     <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -283,7 +287,7 @@ const description =
 
   <Section
     eyebrow="Zona de trabajo"
-    title="Reformas en Madrid y área metropolitana"
+    title="Reformas en Sabadell y área metropolitana"
     description="Trabajamos con equipo propio, así que limitamos el radio de acción para poder garantizar los plazos."
     spacing="md"
   >

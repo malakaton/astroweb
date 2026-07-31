@@ -1,11 +1,11 @@
 ---
-title: Reforma integral de viviendas en Madrid
+title: Reforma integral de viviendas en Sabadell
 shortTitle: Reforma integral
-seoTitle: Reforma integral de pisos en Madrid
-description: Reforma integral de pisos y casas en Madrid con presupuesto cerrado, dirección de obra propia y 3 años de garantía. Proyecto llave en mano en 8-12 semanas.
+seoTitle: Reforma integral de pisos en Sabadell
+description: Reforma integral de pisos y casas en Sabadell con presupuesto cerrado, dirección de obra propia y 3 años de garantía. Proyecto llave en mano en 8-12 semanas.
 excerpt: Rediseñamos tu vivienda completa con un único responsable de obra, presupuesto cerrado y plazos por escrito. Distribución, instalaciones, acabados y licencias.
 cover: ../../assets/servicios/reforma-integral.webp
-coverAlt: Salón amplio y luminoso tras una reforma integral en Madrid
+coverAlt: Salón amplio y luminoso tras una reforma integral en Sabadell
 icon: home
 order: 1
 priceFrom: 480
@@ -24,14 +24,14 @@ includes:
   - Albañilería, solados, alicatados, carpintería y pintura
   - Limpieza final de obra y certificados de instalación
 faqs:
-  - question: ¿Cuánto cuesta una reforma integral en Madrid?
-    answer: Una reforma integral de calidad media-alta en Madrid parte de 480 €/m² e incluye instalaciones nuevas, albañilería, carpintería y acabados. En una vivienda de 90 m² el rango habitual es de 43.000 € a 68.000 € según nivel de acabados y estado de partida.
+  - question: ¿Cuánto cuesta una reforma integral en Sabadell?
+    answer: Una reforma integral de calidad media-alta en Sabadell parte de 480 €/m² e incluye instalaciones nuevas, albañilería, carpintería y acabados. En una vivienda de 90 m² el rango habitual es de 43.000 € a 68.000 € según nivel de acabados y estado de partida.
   - question: ¿Cuánto tarda una reforma integral de un piso?
     answer: Entre 8 y 12 semanas para viviendas de 70 a 120 m² sin cambios estructurales. Si hay que abrir huecos en muros de carga o tramitar licencia de obra mayor, el plazo se amplía de 3 a 6 semanas por los trámites técnicos.
   - question: ¿Puedo vivir en la casa mientras dura la obra?
     answer: No lo recomendamos en una reforma integral porque se retiran instalaciones, baños y cocina. Si es imprescindible, planificamos la obra por fases dejando siempre un baño operativo, aunque el plazo total aumenta alrededor de un 30 %.
   - question: ¿Qué licencias necesita una reforma integral?
-    answer: En Madrid la mayoría de reformas sin afectación estructural se tramitan como declaración responsable. Si se modifican elementos comunes, fachada o estructura hace falta licencia de obra mayor con proyecto de arquitecto. Nos encargamos de todo el trámite.
+    answer: En Sabadell la mayoría de reformas sin afectación estructural se tramitan como declaración responsable. Si se modifican elementos comunes, fachada o estructura hace falta licencia de obra mayor con proyecto de arquitecto. Nos encargamos de todo el trámite.
 updatedAt: 2025-11-18
 ---
 

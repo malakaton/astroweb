@@ -46,7 +46,7 @@ function errorPage(messages: string[], status: number): Response {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>No hemos podido enviar el formulario | Reformas Arana</title>
+<title>No hemos podido enviar el formulario | Grupo S Valles</title>
 <style>
   :root { color-scheme: light }
   body { margin:0; min-height:100vh; display:grid; place-items:center; padding:1.5rem;

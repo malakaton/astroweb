@@ -1,8 +1,8 @@
 ---
 title: Rehabilitación de fachadas y eficiencia energética
 shortTitle: Fachadas y SATE
-seoTitle: Rehabilitación de fachadas en Madrid
-description: Rehabilitación de fachadas con SATE, ITE y subvenciones Next Generation en Madrid. Ahorra hasta el 40 % en climatización con aislamiento certificado.
+seoTitle: Rehabilitación de fachadas en Sabadell
+description: Rehabilitación de fachadas con SATE, ITE y subvenciones Next Generation en Sabadell. Ahorra hasta el 40 % en climatización con aislamiento certificado.
 excerpt: Aislamiento térmico por el exterior (SATE), reparación de cornisas e ITE para comunidades de propietarios, con gestión de ayudas y certificado energético.
 cover: ../../assets/servicios/rehabilitacion-de-fachadas.webp
 coverAlt: Andamio instalado en la rehabilitación de una fachada de edificio
@@ -29,7 +29,7 @@ faqs:
   - question: ¿Hay subvenciones para rehabilitar la fachada?
     answer: Sí. Los programas de rehabilitación energética financian entre el 40 % y el 80 % del coste según la mejora de consumo conseguida, además de deducciones en el IRPF. Preparamos la documentación técnica que exige la convocatoria.
   - question: ¿Qué es la ITE y cada cuánto se pasa?
-    answer: La Inspección Técnica de Edificios es obligatoria en Madrid para edificios de más de 30 años y se renueva cada 10. Si el informe resulta desfavorable, hay plazo para ejecutar las obras de subsanación que redactamos y valoramos.
+    answer: La Inspección Técnica de Edificios es obligatoria en Sabadell para edificios de más de 30 años y se renueva cada 10. Si el informe resulta desfavorable, hay plazo para ejecutar las obras de subsanación que redactamos y valoramos.
   - question: ¿Cuánto dura la obra de una fachada?
     answer: Entre 6 y 14 semanas según superficie, número de balcones y meteorología. El andamio permanece montado todo el periodo, por lo que reforzamos la seguridad de los accesos y avisamos a los vecinos de cada fase.
 updatedAt: 2025-11-18
